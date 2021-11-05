@@ -1,0 +1,35 @@
+.light-tile {
+    -fx-background-color: #804335;
+}
+
+.dark-tile {
+    -fx-background-color: #632c2f;
+}
+
+.button {
+    -fx-focus-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-border-width: 2px;
+    -fx-padding: 16px;
+}
+
+.boardIndicator {
+    -fx-font-size: 23pt;
+}
+
+.selected {
+    -fx-padding: 14px;
+    -fx-border-color: white;
+}
+
+.check {
+    -fx-padding: 14px;
+    -fx-border-color: red;
+}
+
+.possible-path {
+    -fx-padding: 10px;
+    -fx-border-width: 6px;
+    -fx-border-color: green;
+}
