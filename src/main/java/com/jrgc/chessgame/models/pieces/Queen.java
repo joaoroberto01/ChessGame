@@ -10,6 +10,9 @@ public class Queen extends Piece {
 
     @Override
     public boolean canMove(BoardPosition to) {
+        if (cantPreventCheckmatte(to))
+            return false;
+
         return Validator.crossValidation(this, 7, to)
                 || Validator.lineValidation(this, 7, to);
     }

@@ -1,6 +1,6 @@
 package com.jrgc.chessgame.models;
 
-import com.jrgc.chessgame.BoardUtils;
+import com.jrgc.chessgame.utils.BoardUtils;
 
 public class BoardPosition {
     public int line, column;
@@ -25,6 +25,22 @@ public class BoardPosition {
         int number = Math.abs(line - (BoardUtils.BOARD_SIZE - 1)) + 1;
 
         return String.format("%c%d", column + 65, number);
+    }
+
+    public boolean isBetweenPositions(BoardPosition start, BoardPosition end){
+        BoardPosition delta = start.deltaAbs(end);
+        if (delta.column == delta.line)
+            return isInRange(this.line, start.line, end.line) && isInRange(this.column, start.column, end.column);
+        else if (delta.column == 0)
+            return this.column == start.column && isInRange(this.line, start.line, end.line);
+        else if (delta.line == 0)
+            return this.line == start.line && isInRange(this.column, start.column, end.column);
+
+        return false;
+    }
+
+    public static boolean isInRange(int value, int a, int b){
+        return value <= Math.max(a, b) && value >= Math.min(a,b);
     }
 
     @Override

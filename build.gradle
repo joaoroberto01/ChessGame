@@ -24,12 +24,12 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.jrgc.chessgame'
-    mainClass = 'com.jrgc.chessgame.HelloApplication'
+    mainClass = 'com.jrgc.chessgame.ChessApplication'
 }
 
 javafx {
     version = '15.0.1'
-    modules = ['javafx.controls', 'javafx.fxml']
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.media' ]
 }
 
 dependencies {

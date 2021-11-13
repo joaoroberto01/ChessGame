@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<VBox alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.jrgc.chessgame.controllers.PawnPromotionController">
+    <padding>
+        <Insets topRightBottomLeft="32" />
+    </padding>
+
+    <Text textAlignment="CENTER" text="Escolha uma peça para promover seu peão: " style="-fx-font-size: 11pt" />
+    <HBox spacing="10" alignment="CENTER">
+        <padding>
+            <Insets top="20.0" />
+        </padding>
+
+        <Button fx:id="btnBishop" onAction="#onPromotionPieceClick"/>
+        <Button fx:id="btnKnight" onAction="#onPromotionPieceClick"/>
+        <Button fx:id="btnQueen" onAction="#onPromotionPieceClick"/>
+        <Button fx:id="btnRook" onAction="#onPromotionPieceClick"/>
+    </HBox>
+</VBox>

@@ -10,6 +10,9 @@ public class Rook extends Piece {
 
     @Override
     public boolean canMove(BoardPosition to) {
+        if (cantPreventCheckmatte(to))
+            return false;
+
         return Validator.lineValidation(this,7, to);
     }
 }

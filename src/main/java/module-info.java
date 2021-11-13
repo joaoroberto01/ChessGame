@@ -1,5 +1,6 @@
 module com.jrgc.chessgame {
     requires javafx.controls;
+    requires javafx.media;
     requires javafx.fxml;
 
 
@@ -11,4 +12,8 @@ module com.jrgc.chessgame {
     opens com.jrgc.chessgame.models.pieces to javafx.fxml;
     exports com.jrgc.chessgame.controllers;
     opens com.jrgc.chessgame.controllers to javafx.fxml;
+    exports com.jrgc.chessgame.interfaces;
+    opens com.jrgc.chessgame.interfaces to javafx.fxml;
+    exports com.jrgc.chessgame.utils;
+    opens com.jrgc.chessgame.utils to javafx.fxml;
 }

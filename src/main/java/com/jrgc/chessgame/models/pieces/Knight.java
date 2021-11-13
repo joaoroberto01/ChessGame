@@ -1,6 +1,6 @@
 package com.jrgc.chessgame.models.pieces;
 
-import com.jrgc.chessgame.controllers.GameStateController;
+import com.jrgc.chessgame.GameState;
 import com.jrgc.chessgame.models.BoardPosition;
 import com.jrgc.chessgame.models.Player;
 
@@ -11,10 +11,13 @@ public class Knight extends Piece {
 
     @Override
     public boolean canMove(BoardPosition to) {
-        GameStateController gameState = GameStateController.getInstance(false);
+        GameState gameState = GameState.getInstance();
 
-        Piece destinationPiece = gameState.getPiece(to);
+        Piece destinationPiece = gameState.getPieceAt(to);
         boolean playersDiff = destinationPiece != null && getPlayer() != destinationPiece.getPlayer();
+
+        if (cantPreventCheckmatte(to))
+            return false;
 
         BoardPosition deltaPosition = getBoardPosition().deltaAbs(to);
 

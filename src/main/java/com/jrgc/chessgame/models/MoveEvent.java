@@ -1,8 +1,18 @@
 package com.jrgc.chessgame.models;
 
+import com.jrgc.chessgame.models.pieces.Piece;
+
 public class MoveEvent {
+
+    public enum CastlingType {
+        NONE, SHORT, LONG;
+    }
+
     private final BoardPosition source, destination;
-    private boolean success, captured;
+    private boolean success, pawnPromoted;
+    private Piece capturedPiece;
+
+    private CastlingType castlingType = CastlingType.NONE;
 
     public MoveEvent(BoardPosition source, BoardPosition destination) {
         this.source = source;
@@ -23,15 +33,33 @@ public class MoveEvent {
 
     public void setSuccess(boolean success) {
         this.success = success;
-        if (!success)
-            captured = false;
     }
 
     public boolean hasCaptured() {
-        return captured;
+        return capturedPiece != null;
     }
 
-    public void setCaptured(boolean captured) {
-        this.captured = captured;
+    public Piece getCapturedPiece(){
+        return capturedPiece;
+    }
+
+    public void setCapturedPiece(Piece capturedPiece) {
+        this.capturedPiece = capturedPiece;
+    }
+
+    public boolean isPawnPromoted() {
+        return pawnPromoted;
+    }
+
+    public void setPawnPromoted(boolean pawnPromoted) {
+        this.pawnPromoted = pawnPromoted;
+    }
+
+    public CastlingType getCastlingType() {
+        return castlingType;
+    }
+
+    public void setCastlingType(CastlingType castlingType) {
+        this.castlingType = castlingType;
     }
 }

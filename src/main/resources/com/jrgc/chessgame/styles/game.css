@@ -20,7 +20,7 @@
 
 .selected {
     -fx-padding: 14px;
-    -fx-border-color: white;
+    -fx-border-color: white !important;
 }
 
 .check {
