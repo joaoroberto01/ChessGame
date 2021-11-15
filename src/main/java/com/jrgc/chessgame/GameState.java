@@ -1,6 +1,6 @@
 package com.jrgc.chessgame;
 
-import com.jrgc.chessgame.models.*;
+import com.jrgc.chessgame.models.game.*;
 import com.jrgc.chessgame.models.pieces.Piece;
 import javafx.scene.image.ImageView;
 
@@ -39,7 +39,7 @@ public class GameState {
 
     private Player currentPlayer = Player.BLACK;
     private boolean isWhiteCheck = false, isBlackCheck = false;
-    private boolean isCheckmatte = false, isDraw = false;
+    private boolean isCheckmatte = false, isDraw = false, gameOver = false;
 
     private final List<Piece> whitePieces = new ArrayList<>();
     private final List<Piece> blackPieces = new ArrayList<>();
@@ -69,12 +69,6 @@ public class GameState {
         GameState.stateType = stateType;
 
         possibilityState = stateType == StateType.POSSIBILITY ? copyMainState() : null;
-    }
-
-    public static void saveTurnLog(Piece movedPiece, MoveEvent moveEvent) {
-        GameTurnLog gameTurnLog = new GameTurnLog(movedPiece, moveEvent);
-        gameTurnLog.writeToFile();
-        gameTurnsLog.add(gameTurnLog);
     }
 
     public static List<GameTurnLog> getGameTurnsLog() {
@@ -120,6 +114,13 @@ public class GameState {
         this.isDraw = isDraw;
     }
 
+    public void setGameOver(boolean gameOver){
+        this.gameOver = gameOver;
+    }
+
+    public boolean isGameOver(){
+        return gameOver;
+    }
 
     public GameStatus getGameStatus(){
         return gameStatus;
@@ -134,6 +135,8 @@ public class GameState {
             gameStatus = GameStatus.DRAW;
         else
             gameStatus = GameStatus.RUNNING;
+
+        setGameOver(isCheckmatte || isDraw);
     }
 
     public List<Piece> getPlayerPieces(Player player) {

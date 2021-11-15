@@ -1,48 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.Button?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.jrgc.chessgame.controllers.GameController">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.jrgc.chessgame.controllers.GameController" id="root">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <top>
-        <Label alignment="CENTER" text="CHESS"/>
-    </top>
-
     <left>
         <VBox spacing="10">
             <HBox spacing="30">
-                <Label styleClass="boardIndicator" text=" 8 7 6 5 4 3 2 1" prefWidth="1" minWidth="1" maxWidth="1" wrapText="true"/>
-<!--                <Label styleClass="boardIndicator" text=" 0 1 2 3 4 5 6 7" prefWidth="1" minWidth="1" maxWidth="1"-->
-<!--                        wrapText="true"/>-->
-                                <GridPane fx:id="boardGridView" />
-                            </HBox>
-                            <Label  styleClass="boardIndicator" text="          A          B         C         D         E          F          G          H" />
-<!--                <Label  styleClass="boardIndicator" text="          0          1         2         3         4          5          6          7" />-->
-                        </VBox>
-                    </left>
+                <Label styleClass="boardIndicator" text=" 8 7 6 5 4 3 2 1" prefWidth="1" minWidth="1" maxWidth="1"
+                       wrapText="true"/>
+                <GridPane fx:id="boardGridView"/>
+            </HBox>
+            <Label styleClass="boardIndicator"
+                   text="          A          B         C         D         E          F          G          H"/>
+        </VBox>
+    </left>
 
-                    <right>
-                        <VBox>
-                            <Label fx:id="turnLabel" text="Vez de PLAYER 1"/>
-                            <Button text="Reset" onAction="#onResetClick"/>
-                            <Button text="Check Case" onAction="#checkCase"/>
-                            <Button text="CheckMatte Case" onAction="#checkmatteCase"/>
-                        </VBox>
-                    </right>
+    <right>
+        <VBox prefWidth="250" spacing="60">
+            <VBox spacing="20" alignment="CENTER">
+                <Label fx:id="turnLabel" id="turnLabel" />
 
-                    <stylesheets>
-                        <URL value="@styles/game.css"/>
-                    </stylesheets>
-                </BorderPane>
+                <HBox spacing="10">
+                    <Button text="Reiniciar" styleClass="image-button" onAction="#onResetClick">
+                        <graphic>
+                            <ImageView fitWidth="48" fitHeight="48">
+                                <Image url="@icons/reset.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="drawButton" text="Sugerir Empate" styleClass="image-button" onAction="#onDrawSuggestClick">
+                        <graphic>
+                            <ImageView fitWidth="48" fitHeight="48">
+                                <Image url="@icons/draw.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="surrenderButton" text="Rendição" styleClass="image-button" onAction="#onSurrenderClick">
+                        <graphic>
+                            <ImageView fitWidth="48" fitHeight="48">
+                                <Image url="@icons/surrender.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
+                <Button text="Check Case" onAction="#checkCase"/>
+                <Button text="CheckMatte Case" onAction="#checkmatteCase"/>
+            </VBox>
+            <Accordion>
+                <panes>
+                    <TitledPane text="Jogadas">
+                        <ListView fx:id="gameLogListView"/>
+                    </TitledPane>
+                </panes>
+            </Accordion>
+        </VBox>
+    </right>
+
+    <stylesheets>
+        <URL value="@styles/game.css"/>
+    </stylesheets>
+</BorderPane>

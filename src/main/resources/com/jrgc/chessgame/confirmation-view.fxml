@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import java.net.URL?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.jrgc.chessgame.controllers.ConfirmationController">
+    <padding>
+        <Insets topRightBottomLeft="32" />
+    </padding>
+
+    <top>
+        <Text fx:id="confirmationTitle" textAlignment="CENTER" style="-fx-font-size: 11pt" BorderPane.alignment="CENTER" />
+    </top>
+
+    <center>
+        <HBox spacing="10" alignment="CENTER">
+            <Button id="acceptButton" text="Confirmar" onAction="#onAcceptClick"/>
+            <Button id="denyButton" text="Recusar" onAction="#onDenyClick"/>
+        </HBox>
+    </center>
+
+    <stylesheets>
+        <URL value="@styles/dialog.css"/>
+    </stylesheets>
+</BorderPane>

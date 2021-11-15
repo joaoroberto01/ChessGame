@@ -1,7 +1,7 @@
 package com.jrgc.chessgame.controllers;
 
 import com.jrgc.chessgame.interfaces.PawnPromotionListener;
-import com.jrgc.chessgame.models.Player;
+import com.jrgc.chessgame.models.game.Player;
 import com.jrgc.chessgame.models.pieces.Piece;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

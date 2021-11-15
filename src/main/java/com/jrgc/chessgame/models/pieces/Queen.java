@@ -1,7 +1,7 @@
 package com.jrgc.chessgame.models.pieces;
 
-import com.jrgc.chessgame.models.BoardPosition;
-import com.jrgc.chessgame.models.Player;
+import com.jrgc.chessgame.models.game.BoardPosition;
+import com.jrgc.chessgame.models.game.Player;
 
 public class Queen extends Piece {
     protected Queen(Player player, BoardPosition boardPosition){

@@ -1,7 +1,7 @@
 package com.jrgc.chessgame.models.pieces;
 
-import com.jrgc.chessgame.models.BoardPosition;
-import com.jrgc.chessgame.models.Player;
+import com.jrgc.chessgame.models.game.BoardPosition;
+import com.jrgc.chessgame.models.game.Player;
 
 public class Rook extends Piece {
     protected Rook(Player player, BoardPosition boardPosition){

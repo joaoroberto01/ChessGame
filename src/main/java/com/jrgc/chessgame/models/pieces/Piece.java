@@ -1,10 +1,11 @@
 package com.jrgc.chessgame.models.pieces;
 
+import com.jrgc.chessgame.Settings;
 import com.jrgc.chessgame.utils.BoardUtils;
 import com.jrgc.chessgame.ChessApplication;
 import com.jrgc.chessgame.GameState;
-import com.jrgc.chessgame.models.BoardPosition;
-import com.jrgc.chessgame.models.Player;
+import com.jrgc.chessgame.models.game.BoardPosition;
+import com.jrgc.chessgame.models.game.Player;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -111,7 +112,8 @@ public abstract class Piece {
     }
 
     public static Image getPieceImage(PieceType pieceType, Player player) {
-        String path = "images/" + pieceType.toString().toLowerCase();
+        String folder = Settings.getInstance().getPieceStyle().getPath();
+        String path = "images/" + folder + pieceType.toString().toLowerCase();
         path += player == Player.WHITE ? "_white.png" : "_black.png";
 
         return new Image(ChessApplication.class.getResourceAsStream(path));

@@ -1,0 +1,21 @@
+#acceptButton {
+    -fx-text-fill: white;
+    -fx-background-color: green;
+}
+
+#acceptButton:hover {
+    -fx-text-fill: white;
+    -fx-background-color: darkgreen;
+    -fx-cursor: hand;
+}
+
+#denyButton {
+    -fx-text-fill: white;
+    -fx-background-color: red;
+}
+
+#denyButton:hover {
+    -fx-text-fill: white;
+    -fx-background-color: darkred;
+    -fx-cursor: hand;
+}

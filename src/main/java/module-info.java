@@ -16,4 +16,6 @@ module com.jrgc.chessgame {
     opens com.jrgc.chessgame.interfaces to javafx.fxml;
     exports com.jrgc.chessgame.utils;
     opens com.jrgc.chessgame.utils to javafx.fxml;
+    exports com.jrgc.chessgame.models.game;
+    opens com.jrgc.chessgame.models.game to javafx.fxml;
 }

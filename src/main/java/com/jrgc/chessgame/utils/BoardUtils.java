@@ -1,9 +1,9 @@
 package com.jrgc.chessgame.utils;
 
 import com.jrgc.chessgame.GameState;
-import com.jrgc.chessgame.models.BoardPosition;
-import com.jrgc.chessgame.models.MoveEvent;
-import com.jrgc.chessgame.models.Player;
+import com.jrgc.chessgame.models.game.BoardPosition;
+import com.jrgc.chessgame.models.game.MoveEvent;
+import com.jrgc.chessgame.models.game.Player;
 import com.jrgc.chessgame.models.pieces.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;

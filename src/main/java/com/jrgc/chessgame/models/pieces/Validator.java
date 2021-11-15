@@ -2,12 +2,11 @@ package com.jrgc.chessgame.models.pieces;
 
 import com.jrgc.chessgame.utils.BoardUtils;
 import com.jrgc.chessgame.GameState;
-import com.jrgc.chessgame.models.BoardPosition;
-import com.jrgc.chessgame.models.Player;
+import com.jrgc.chessgame.models.game.BoardPosition;
+import com.jrgc.chessgame.models.game.Player;
 
 import java.util.List;
 
-import static com.jrgc.chessgame.utils.BoardUtils.BOARD_SIZE;
 import static com.jrgc.chessgame.utils.BoardUtils.updateAllPossibleMoves;
 
 public class Validator {
@@ -161,9 +160,9 @@ public class Validator {
 
         Player currentPlayer = gameState.getCurrentPlayer();
 
-        boolean stalemate = !gameState.isCheckmatte() && Validator.playerHasNoMoves(currentPlayer);
-        boolean a = true;
+        boolean stalemate = !gameState.isCheck() && Validator.playerHasNoMoves(currentPlayer);
+        boolean fiftyMoves = false;
 
-        return stalemate && a;
+        return stalemate || fiftyMoves;
     }
 }

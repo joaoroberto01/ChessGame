@@ -1,6 +1,5 @@
-package com.jrgc.chessgame.models;
+package com.jrgc.chessgame.models.game;
 
-import com.jrgc.chessgame.GameState;
 import com.jrgc.chessgame.models.pieces.Piece;
 
 import java.io.BufferedWriter;
@@ -30,10 +29,7 @@ public class GameTurnLog {
             String to = moveEvent.getDestination().toFormattedString();
 
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("match_log.txt", true));
-            if (piece != null)
-                bufferedWriter.append(String.format("%s: ", piece.getPlayer() + " " + piece.getPieceType()));
-            else
-                bufferedWriter.append("null: ");
+            bufferedWriter.append(String.format("%s: ", piece.getPlayer() + " " + piece.getPieceType()));
             bufferedWriter.append(String.format("%s -> %s", from, to));
             bufferedWriter.append("\n");
             bufferedWriter.close();
@@ -50,5 +46,11 @@ public class GameTurnLog {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return piece + " (" + moveEvent.getSource().toFormattedString() + ") -> " +
+                moveEvent.getDestination().toFormattedString();
     }
 }

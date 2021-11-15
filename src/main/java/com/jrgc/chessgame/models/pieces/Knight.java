@@ -1,8 +1,8 @@
 package com.jrgc.chessgame.models.pieces;
 
 import com.jrgc.chessgame.GameState;
-import com.jrgc.chessgame.models.BoardPosition;
-import com.jrgc.chessgame.models.Player;
+import com.jrgc.chessgame.models.game.BoardPosition;
+import com.jrgc.chessgame.models.game.Player;
 
 public class Knight extends Piece {
     protected Knight(Player player, BoardPosition boardPosition){

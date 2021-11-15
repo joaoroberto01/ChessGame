@@ -1,9 +1,23 @@
-.light-tile {
+#root {
+    /*-fx-background-color: #D6B450;*/
+    -fx-background-color: rgb(223, 200, 140);
+
+}
+
+.light-tile.brown {
     -fx-background-color: #804335;
 }
 
-.dark-tile {
+.dark-tile.brown {
     -fx-background-color: #632c2f;
+}
+
+.light-tile.gray {
+    -fx-background-color: #595959;
+}
+
+.dark-tile.gray {
+    -fx-background-color: #363636;
 }
 
 .button {
@@ -32,4 +46,28 @@
     -fx-padding: 10px;
     -fx-border-width: 6px;
     -fx-border-color: green;
+}
+
+#turnLabel {
+    -fx-font-size: 14pt;
+    -fx-font-weight: bolder;
+}
+
+.image-button{
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 20px;
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+    -fx-content-display: top;
+}
+
+.image-button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+.image-button:pressed {
+    -fx-background-color: black;
+    -fx-text-fill: white;
 }

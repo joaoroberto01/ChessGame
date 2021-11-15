@@ -1,8 +1,13 @@
 package com.jrgc.chessgame.controllers;
 
 import com.jrgc.chessgame.ChessApplication;
-import com.jrgc.chessgame.SoundAlert;
-import com.jrgc.chessgame.models.*;
+import com.jrgc.chessgame.interfaces.ConfirmationListener;
+import com.jrgc.chessgame.models.game.BoardPosition;
+import com.jrgc.chessgame.models.game.GameTurnLog;
+import com.jrgc.chessgame.models.game.MoveEvent;
+import com.jrgc.chessgame.models.game.Player;
+import com.jrgc.chessgame.Settings;
+import com.jrgc.chessgame.models.SoundAlert;
 import com.jrgc.chessgame.utils.BoardUtils;
 import com.jrgc.chessgame.GameState;
 import com.jrgc.chessgame.utils.SceneManager;
@@ -19,11 +24,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import static com.jrgc.chessgame.utils.BoardUtils.BOARD_SIZE;
@@ -32,10 +38,18 @@ import static com.jrgc.chessgame.utils.BoardUtils.updateAllPossibleMoves;
 public class GameController implements EventHandler<MouseEvent> {
 
     @FXML
+    private Button drawButton, surrenderButton;
+
+    @FXML
+    private ListView<GameTurnLog> gameLogListView;
+
+    @FXML
     private Label turnLabel;
 
     @FXML
-    public GridPane boardGridView;
+    private GridPane boardGridView;
+
+    private final Settings settings = Settings.getInstance();
 
     private BoardPosition sourcePosition = null, destinationPosition = null;
     private Button lastClickedButton;
@@ -45,6 +59,9 @@ public class GameController implements EventHandler<MouseEvent> {
         gameState = GameState.getInstance(true);
         setupGrid();
         toggleCurrentPlayer();
+
+        drawButton.setDisable(false);
+        surrenderButton.setDisable(false);
     }
 
     @FXML
@@ -111,7 +128,63 @@ public class GameController implements EventHandler<MouseEvent> {
     }
 
     public void onResetClick() {
-        initialize();
+        disableBackground(true);
+        SceneManager.popUpConfirmation(getStage(), "Reiniciar o jogo?", new ConfirmationListener() {
+            @Override
+            public void onConfirmationAccepted() {
+                initialize();
+            }
+
+            @Override
+            public void onConfirmationDenied() {
+
+            }
+        });
+        disableBackground(false);
+    }
+
+    public void onDrawSuggestClick() {
+        disableBackground(true);
+        toggleCurrentPlayer();
+        SceneManager.popUpConfirmation(getStage(), settings.getName(gameState.getCurrentPlayer()) + ", aceita o empate?", new ConfirmationListener() {
+            @Override
+            public void onConfirmationAccepted() {
+                gameState.setDraw(true);
+                finishGame();
+                turnLabel.setText("Empate");
+            }
+
+            @Override
+            public void onConfirmationDenied() {
+                toggleCurrentPlayer();
+            }
+        });
+        disableBackground(false);
+    }
+
+    public void onSurrenderClick() {
+        disableBackground(true);
+        SceneManager.popUpConfirmation(getStage(), "Render-se?", new ConfirmationListener() {
+            @Override
+            public void onConfirmationAccepted() {
+                finishGame();
+                Player opponent = Player.getOpponent(gameState.getCurrentPlayer());
+
+                turnLabel.setText(settings.getName(opponent) + " venceu por desistência");
+            }
+
+            @Override
+            public void onConfirmationDenied() {
+
+            }
+        });
+        disableBackground(false);
+    }
+
+    private void finishGame() {
+        gameState.setGameOver(true);
+        drawButton.setDisable(true);
+        surrenderButton.setDisable(true);
     }
 
     private double getBoardCenterX(Stage stage) {
@@ -153,6 +226,7 @@ public class GameController implements EventHandler<MouseEvent> {
 
                 String tileBackground = (i + j) % 2 == 0 ? "light-tile" : "dark-tile";
                 tile.getStyleClass().add(tileBackground);
+                tile.getStyleClass().add(settings.getBoardStyle().toString());
                 boardGridView.add(tile, j, i, 1, 1);
             }
         }
@@ -162,12 +236,14 @@ public class GameController implements EventHandler<MouseEvent> {
 
         for (Piece blackPiece : gameState.getPlayerPieces(Player.BLACK))
             blackPiece.setPossibleMoves();
-
     }
 
     private void toggleCurrentPlayer() {
         gameState.toggleCurrentPlayer();
-        turnLabel.setText("Vez de " + gameState.getCurrentPlayer());
+
+        Player currentPlayer = gameState.getCurrentPlayer();
+        turnLabel.setText("Vez de " + settings.getName(currentPlayer));
+        turnLabel.setTextFill(currentPlayer == Player.WHITE ? Color.WHITE : Color.BLACK);
     }
 
     private void selectTile(Button clickedButton){
@@ -216,6 +292,8 @@ public class GameController implements EventHandler<MouseEvent> {
         if (moveEvent.isPawnPromoted())
             openPawnPromotionDialog(movedPiece);
 
+        updateAllPossibleMoves();
+
         boolean whiteCheck = Validator.checkValidation(Player.WHITE);
         boolean blackCheck = Validator.checkValidation(Player.BLACK);
 
@@ -227,10 +305,15 @@ public class GameController implements EventHandler<MouseEvent> {
         if (gameState.isCheck())
             gameState.setCheckmatte(Validator.checkmatteValidation(movedPiece));
 
+        toggleCurrentPlayer();
+
         gameState.setDraw(Validator.draw());
         gameState.updateGameStatus();
 
-        GameState.saveTurnLog(movedPiece, moveEvent);
+        GameTurnLog gameTurnLog = new GameTurnLog(movedPiece, moveEvent);
+        gameTurnLog.writeToFile();
+        GameState.getGameTurnsLog().add(gameTurnLog);
+        gameLogListView.getItems().add(gameTurnLog);
 
         Alert alert;
         switch (gameState.getGameStatus()) {
@@ -241,7 +324,6 @@ public class GameController implements EventHandler<MouseEvent> {
                 alert.setTitle("Parabéns, " + (whiteCheck ? "Branco" : "Preto"));
                 alert.setContentText("CHEQUEMATTE");
                 alert.show();
-                return;
             }
             case DRAW -> {
                 playSound(SoundAlert.DRAW);
@@ -250,7 +332,6 @@ public class GameController implements EventHandler<MouseEvent> {
                 alert.setTitle("Its a fucking draw");
                 alert.setContentText("AFFOGATION DRAWWW");
                 alert.show();
-                return;
             }
             case CHECK -> {
                 playSound(SoundAlert.CHECK);
@@ -259,14 +340,15 @@ public class GameController implements EventHandler<MouseEvent> {
             }
             case RUNNING -> playSound(moveEvent.hasCaptured() ? SoundAlert.CAPTURE : SoundAlert.MOVE);
         }
+    }
 
-        toggleCurrentPlayer();
-        updateAllPossibleMoves();
+    private Stage getStage(){
+        return (Stage) boardGridView.getScene().getWindow();
     }
 
     private void openPawnPromotionDialog(Piece movedPiece) {
-        Stage stage = (Stage) boardGridView.getScene().getWindow();
-        stage.getScene().getRoot().setDisable(true);
+        Stage stage = getStage();
+        disableBackground(true);
 
         double x = getBoardCenterX(stage);
         double y = getBoardCenterY(stage);
@@ -288,10 +370,17 @@ public class GameController implements EventHandler<MouseEvent> {
             }
         });
 
-        stage.getScene().getRoot().setDisable(false);
+        disableBackground(false);
+    }
+
+    private void disableBackground(boolean disable) {
+        getStage().getScene().getRoot().setDisable(disable);
     }
 
     private void playSound(SoundAlert soundAlert) {
+        if (!settings.isSoundOn())
+            return;
+
         AudioClip audioClip = new AudioClip(ChessApplication.class.getResource(soundAlert.getUrl()).toString());
         audioClip.play();
     }
@@ -303,7 +392,7 @@ public class GameController implements EventHandler<MouseEvent> {
     }
 
     private void select(Button clickedButton) {
-        if (gameState.isCheckmatte())
+        if (gameState.isGameOver())
             return;
 
         BoardPosition clickedPosition = getClickIndex(clickedButton.getGraphic());

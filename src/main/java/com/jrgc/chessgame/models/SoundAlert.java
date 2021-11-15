@@ -1,4 +1,4 @@
-package com.jrgc.chessgame;
+package com.jrgc.chessgame.models;
 
 public enum SoundAlert {
     MOVE, INVALID, CAPTURE, PAWN_PROMOTION, CHECK, CHECKMATTE, DRAW;

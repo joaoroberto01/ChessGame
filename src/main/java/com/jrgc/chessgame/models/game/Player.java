@@ -1,4 +1,6 @@
-package com.jrgc.chessgame.models;
+package com.jrgc.chessgame.models.game;
+
+import com.jrgc.chessgame.Settings;
 
 public enum Player {
     WHITE, BLACK;
