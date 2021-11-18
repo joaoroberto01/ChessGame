@@ -1,0 +1,33 @@
+.background {
+    -fx-background-color: rgb(223, 200, 140);
+}
+
+.button {
+    -fx-cursor: hand;
+}
+
+.mainTitle {
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+}
+
+#helpTitlePane {
+    -fx-box-border: rgb(223, 200, 140);
+}
+
+#help {
+    -fx-max-width: 415px;
+}
+
+#help > .button {
+    -fx-pref-width: 125px;
+    -fx-pref-height: 80px;
+    -fx-background-color: #bdaa77;
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+    -fx-content-display: top;
+}
+
+#help > .button:hover {
+    -fx-background-color: #9c8c62;
+}

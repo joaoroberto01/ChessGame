@@ -27,4 +27,11 @@ public class Knight extends Piece {
         int deltaDiff = Math.abs(deltaPosition.line - deltaPosition.column);
         return deltaDiff == 1 && (destinationPiece == null || playersDiff);
     }
+
+    public static String getRule(){
+        return """
+        O cavalo se movimenta em "L", ou seja, move duas casas em linha reta e depois uma casa para o lado.
+        Essa peça goza de uma liberdade especial em seu movimento, podendo pular qualquer peça.
+        Captura as peças adversárias na casa de destino, mas não pode ir para uma casa ocupada por uma peça aliada.""";
+    }
 }

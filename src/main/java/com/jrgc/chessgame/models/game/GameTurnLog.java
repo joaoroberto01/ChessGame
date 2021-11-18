@@ -38,7 +38,7 @@ public class GameTurnLog {
         }
     }
 
-    public static void clearLog(){
+    public static void clearLogFile(){
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("match_log.txt"));
             bufferedWriter.write("");

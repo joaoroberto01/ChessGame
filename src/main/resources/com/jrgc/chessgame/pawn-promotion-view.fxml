@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import java.net.URL?>
 <VBox alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.jrgc.chessgame.controllers.PawnPromotionController">
     <padding>
         <Insets topRightBottomLeft="32" />
@@ -21,4 +22,8 @@
         <Button fx:id="btnQueen" onAction="#onPromotionPieceClick"/>
         <Button fx:id="btnRook" onAction="#onPromotionPieceClick"/>
     </HBox>
+
+    <stylesheets>
+        <URL value="@styles/dialog.css"/>
+    </stylesheets>
 </VBox>

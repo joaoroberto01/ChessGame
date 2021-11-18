@@ -1,3 +1,7 @@
+.button:hover {
+    -fx-cursor: hand;
+}
+
 #acceptButton {
     -fx-text-fill: white;
     -fx-background-color: green;
@@ -6,7 +10,6 @@
 #acceptButton:hover {
     -fx-text-fill: white;
     -fx-background-color: darkgreen;
-    -fx-cursor: hand;
 }
 
 #denyButton {
@@ -17,5 +20,4 @@
 #denyButton:hover {
     -fx-text-fill: white;
     -fx-background-color: darkred;
-    -fx-cursor: hand;
 }

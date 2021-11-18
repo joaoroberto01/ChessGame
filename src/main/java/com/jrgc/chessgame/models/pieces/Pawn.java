@@ -91,4 +91,21 @@ public class Pawn extends Piece {
 
         return horizontalLastMove && diagonalMove && destinationIsBehind ? lastTurn.getPiece() : null;
     }
+
+    public static String getRule(){
+        return """
+                O peão se movimenta verticalmente. É a única peça do xadrez que nunca retrocede no tabuleiro.
+                No seu primeiro movimento, é possivel andar uma ou duas casas na mesma coluna.
+                Após esse movimento é possível andar apenas uma casa.
+                        
+                Caso ele alcance a primeira fileira do adversário no tabuleiro, o jogador deve promover seu peão,
+                escolhendo entre: dama, torre, bispo ou cavalo, mesmo que haja outras em jogo.
+                        
+                Captura apenas peças inimigas na diagonal a sua frente, andando apenas uma casa.
+                Desse modo, qualquer peça pode parar a marcha de um peão.
+                        
+                O peão pode realizar o movimento especial "En passant",
+                capturando o peão que andou duas casas na ultima jogada.
+                Desde de que o peão adversário que andou na ultima jogada esteja ao seu lado.""";
+    }
 }

@@ -1,6 +1,10 @@
-package com.jrgc.chessgame.models.pieces;
+package com.jrgc.chessgame.utils;
 
-import com.jrgc.chessgame.utils.BoardUtils;
+import com.jrgc.chessgame.models.game.DrawType;
+import com.jrgc.chessgame.models.game.GameTurnLog;
+import com.jrgc.chessgame.models.pieces.King;
+import com.jrgc.chessgame.models.pieces.Pawn;
+import com.jrgc.chessgame.models.pieces.Piece;
 import com.jrgc.chessgame.GameState;
 import com.jrgc.chessgame.models.game.BoardPosition;
 import com.jrgc.chessgame.models.game.Player;
@@ -10,7 +14,7 @@ import java.util.List;
 import static com.jrgc.chessgame.utils.BoardUtils.updateAllPossibleMoves;
 
 public class Validator {
-    protected static boolean crossValidation(Piece currentPiece, int range, BoardPosition to){
+    public static boolean crossValidation(Piece currentPiece, int range, BoardPosition to){
         BoardPosition from = currentPiece.getBoardPosition();
         BoardPosition delta = from.deltaAbs(to);
 
@@ -24,7 +28,7 @@ public class Validator {
         return false;
     }
 
-    protected static boolean lineValidation(Piece currentPiece, int range, BoardPosition to){
+    public static boolean lineValidation(Piece currentPiece, int range, BoardPosition to){
         BoardPosition from = currentPiece.getBoardPosition();
         BoardPosition delta = from.deltaAbs(to);
 
@@ -155,14 +159,73 @@ public class Validator {
         return false;
     }
 
-    public static boolean draw() {
+    public static DrawType draw() {
         GameState gameState = GameState.getInstance();
 
         Player currentPlayer = gameState.getCurrentPlayer();
 
         boolean stalemate = !gameState.isCheck() && Validator.playerHasNoMoves(currentPlayer);
-        boolean fiftyMoves = false;
+        if (stalemate)
+            return DrawType.STALEMATE;
 
-        return stalemate || fiftyMoves;
+        int moves = 0;
+
+        for (GameTurnLog gameTurnLog : GameState.getGameTurnsLog()) {
+            if (++moves >= 10)
+                return DrawType.FIFTY_MOVES;
+
+            if (gameTurnLog.getMoveEvent().hasCaptured() || gameTurnLog.getPiece() instanceof Pawn)
+                moves = 0;
+        }
+
+        if (insufficientMaterial(Player.WHITE) && insufficientMaterial(Player.BLACK))
+            return DrawType.INSUFFICIENT_MATERIAL;
+
+        return null;
+    }
+
+    private static boolean insufficientMaterial(Player player){
+        GameState gameState = GameState.getInstance();
+        List<Piece> pieces = gameState.getPlayerPieces(player);
+
+        if (pieces.size() == 0 || pieces.size() > 3)
+            return false;
+
+        int king = 0, knights = 0, bishop = 0;
+
+        for (Piece piece : pieces){
+            switch (piece.getPieceType()){
+                case KING -> king++;
+                case KNIGHT -> knights++;
+                case BISHOP -> bishop++;
+                default -> {
+                    return false;
+                }
+            }
+        }
+
+        // rei e um bispo, o rei e um cavalo ou o rei e dois cavalos contra um rei sozinho
+        //0 bishop, 0 knights
+        //0 bishop, 1 knight
+        //1 bishop, 0 knights
+        //0 bishop, 2 knight vs 1 king
+
+        if (king != 1)
+            return false;
+
+        return (bishop == 0 && knights < 2) || (bishop == 1 && knights == 0) ||
+                (bishop == 0 && knights == 2 && isOpponentKingOnly(player));
+    }
+
+    private static boolean isOpponentKingOnly(Player player){
+        GameState gameState = GameState.getInstance();
+        Player opponent = Player.getOpponent(player);
+
+        for (Piece piece : gameState.getPlayerPieces(opponent)){
+            if (!(piece instanceof King))
+                return false;
+        }
+
+        return true;
     }
 }

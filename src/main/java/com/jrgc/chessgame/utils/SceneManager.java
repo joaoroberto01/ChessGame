@@ -3,13 +3,18 @@ package com.jrgc.chessgame.utils;
 import com.jrgc.chessgame.ChessApplication;
 import com.jrgc.chessgame.controllers.ConfirmationController;
 import com.jrgc.chessgame.controllers.PawnPromotionController;
+import com.jrgc.chessgame.controllers.RulesController;
 import com.jrgc.chessgame.interfaces.ConfirmationListener;
 import com.jrgc.chessgame.interfaces.PawnPromotionListener;
 import com.jrgc.chessgame.models.game.Player;
+import com.jrgc.chessgame.models.pieces.Piece;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.effect.BoxBlur;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -29,12 +34,20 @@ public class SceneManager {
         }
     }
 
-    public static Stage getCurrentStage(Node node){
-        return (Stage) node.getScene().getWindow();
+    public static void goToPlayers(Stage stage){
+        SceneDetails sceneDetails = new SceneDetails("players-view.fxml", "Seleção de Jogadores", 300, 240);
+
+        showScene(stage, sceneDetails);
     }
 
-    public static void goToLogin(Stage stage){
-        SceneDetails sceneDetails = new SceneDetails("login-view.fxml", "Autenticação BankNu", 380, 320);
+    public static void goToPreGame(Stage stage){
+        SceneDetails sceneDetails = new SceneDetails("pre-game-view.fxml", "Sua partida vai começar em breve!", 700, 500);
+
+        showScene(stage, sceneDetails);
+    }
+
+    public static void goToGame(Stage stage){
+        SceneDetails sceneDetails = new SceneDetails("game-view.fxml", "Chess Game", 1000, 720);
 
         showScene(stage, sceneDetails);
     }
@@ -50,7 +63,7 @@ public class SceneManager {
             PawnPromotionController pawnPromotionController = fxmlLoader.getController();
             pawnPromotionController.setup(currentPlayer, pawnPromotionListener);
 
-            showPopUpStage(root, parent, sceneDetails);
+            showPopUpStage(root, parent, sceneDetails, true);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -58,14 +71,27 @@ public class SceneManager {
 
     public static void popUpConfirmation(Stage root, String title, ConfirmationListener confirmationListener){
         SceneDetails sceneDetails = new SceneDetails("confirmation-view.fxml", title, 340, 160);
-
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(ChessApplication.class.getResource(sceneDetails.path));
             Parent parent = fxmlLoader.load();
             ConfirmationController confirmationController = fxmlLoader.getController();
             confirmationController.setup(sceneDetails.title, confirmationListener);
 
-            showPopUpStage(root, parent, sceneDetails);
+            showPopUpStage(root, parent, sceneDetails, true);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void popUpRules(Stage root, Piece.PieceType pieceType){
+        SceneDetails sceneDetails = new SceneDetails("rules-view.fxml", "", 650, 300);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(ChessApplication.class.getResource(sceneDetails.path));
+            Parent parent = fxmlLoader.load();
+            RulesController rulesController = fxmlLoader.getController();
+            rulesController.setup(pieceType);
+
+            showPopUpStage(root, parent, sceneDetails, false);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -78,7 +104,7 @@ public class SceneManager {
             Scene scene = new Scene(fxmlLoader.load(), sceneDetails.width, sceneDetails.height);
 
             stage.setTitle(sceneDetails.title);
-            //stage.getIcons().add(new Image(ChessApplication.class.getResourceAsStream("appicon.png")));
+            stage.centerOnScreen();
             stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
@@ -87,7 +113,7 @@ public class SceneManager {
         }
     }
 
-    private static void showPopUpStage(Stage root, Parent parent, SceneDetails sceneDetails){
+    private static void showPopUpStage(Stage root, Parent parent, SceneDetails sceneDetails, boolean blur){
         Scene scene = new Scene(parent, sceneDetails.width, sceneDetails.height);
 
         Stage stage = new Stage();
@@ -97,10 +123,17 @@ public class SceneManager {
         if (sceneDetails.windowY != -1)
             stage.setY(sceneDetails.windowY);
 
+        if (sceneDetails.windowX == -1 || sceneDetails.windowY == -1)
+            stage.centerOnScreen();
+
         stage.initOwner(root);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setResizable(false);
         stage.setScene(scene);
+
+        root.getScene().getRoot().setEffect(blur ? new BoxBlur(10,10, 2) : null);
         stage.showAndWait();
+        root.getScene().getRoot().setEffect(null);
     }
 }

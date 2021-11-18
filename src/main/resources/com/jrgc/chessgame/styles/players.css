@@ -1,0 +1,15 @@
+#root {
+    -fx-background-color: rgb(223, 200, 140);
+}
+
+.button:hover {
+    -fx-cursor: hand;
+}
+
+.errorText {
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-background-color: rgba(255, 0, 0, 0.3);
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+}

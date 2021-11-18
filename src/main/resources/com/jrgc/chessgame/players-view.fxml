@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml" id="root"
+      fx:controller="com.jrgc.chessgame.controllers.PlayersController">
+    <padding>
+        <Insets topRightBottomLeft="20"/>
+    </padding>
+
+    <Text text="Jogadores" textAlignment="CENTER" style="-fx-font-size: 11pt"/>
+    <HBox alignment="CENTER" spacing="8">
+        <ImageView fitHeight="24" fitWidth="24">
+            <Image url="@images/pixel/pawn_white.png"/>
+        </ImageView>
+        <TextField fx:id="whiteTextField" promptText="Jogador 1"/>
+    </HBox>
+
+    <HBox alignment="CENTER" spacing="8">
+        <ImageView fitHeight="24" fitWidth="24">
+            <Image url="@images/pixel/pawn_black.png"/>
+        </ImageView>
+        <TextField fx:id="blackTextField" promptText="Jogador 2" />
+    </HBox>
+
+    <Label alignment="CENTER" fx:id="errorText" text="⚠ Preencha todos os nomes" managed="false" styleClass="errorText" textFill="white"/>
+
+    <HBox alignment="CENTER" spacing="20">
+        <Button alignment="BOTTOM_LEFT" text="Limpar" onAction="#onClearClick"/>
+        <Button alignment="BOTTOM_RIGHT" BorderPane.alignment="BOTTOM_RIGHT" text="Continuar"
+                onAction="#onContinueClick"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@styles/players.css" />
+    </stylesheets>
+</VBox>

@@ -28,6 +28,28 @@ public abstract class Piece {
             return null;
         }
 
+        public String getPieceRule(){
+            return switch (this){
+                case KING -> King.getRule();
+                case QUEEN -> Queen.getRule();
+                case KNIGHT -> Knight.getRule();
+                case ROOK -> Rook.getRule();
+                case BISHOP -> Bishop.getRule();
+                case PAWN -> Pawn.getRule();
+            };
+        }
+
+        public String toFormattedString(){
+            return switch (this){
+                case KING -> "Rei";
+                case QUEEN -> "Rainha";
+                case ROOK -> "Torre";
+                case KNIGHT -> "Cavalo";
+                case BISHOP -> "Bispo";
+                case PAWN -> "Peão";
+            };
+        }
+
         @Override
         public String toString() {
             return name().substring(0, 1).toUpperCase() + name().substring(1).toLowerCase();

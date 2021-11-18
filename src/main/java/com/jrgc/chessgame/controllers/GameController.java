@@ -2,10 +2,7 @@ package com.jrgc.chessgame.controllers;
 
 import com.jrgc.chessgame.ChessApplication;
 import com.jrgc.chessgame.interfaces.ConfirmationListener;
-import com.jrgc.chessgame.models.game.BoardPosition;
-import com.jrgc.chessgame.models.game.GameTurnLog;
-import com.jrgc.chessgame.models.game.MoveEvent;
-import com.jrgc.chessgame.models.game.Player;
+import com.jrgc.chessgame.models.game.*;
 import com.jrgc.chessgame.Settings;
 import com.jrgc.chessgame.models.SoundAlert;
 import com.jrgc.chessgame.utils.BoardUtils;
@@ -15,22 +12,24 @@ import com.jrgc.chessgame.interfaces.PawnPromotionListener;
 import com.jrgc.chessgame.models.pieces.King;
 import com.jrgc.chessgame.models.pieces.Pawn;
 import com.jrgc.chessgame.models.pieces.Piece;
-import com.jrgc.chessgame.models.pieces.Validator;
+import com.jrgc.chessgame.utils.Validator;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.jrgc.chessgame.utils.BoardUtils.BOARD_SIZE;
 import static com.jrgc.chessgame.utils.BoardUtils.updateAllPossibleMoves;
@@ -44,7 +43,7 @@ public class GameController implements EventHandler<MouseEvent> {
     private ListView<GameTurnLog> gameLogListView;
 
     @FXML
-    private Label turnLabel;
+    private Label turnLabel, timeLabel;
 
     @FXML
     private GridPane boardGridView;
@@ -60,6 +59,7 @@ public class GameController implements EventHandler<MouseEvent> {
         setupGrid();
         toggleCurrentPlayer();
 
+        gameLogListView.getItems().clear();
         drawButton.setDisable(false);
         surrenderButton.setDisable(false);
     }
@@ -128,7 +128,6 @@ public class GameController implements EventHandler<MouseEvent> {
     }
 
     public void onResetClick() {
-        disableBackground(true);
         SceneManager.popUpConfirmation(getStage(), "Reiniciar o jogo?", new ConfirmationListener() {
             @Override
             public void onConfirmationAccepted() {
@@ -140,11 +139,9 @@ public class GameController implements EventHandler<MouseEvent> {
 
             }
         });
-        disableBackground(false);
     }
 
     public void onDrawSuggestClick() {
-        disableBackground(true);
         toggleCurrentPlayer();
         SceneManager.popUpConfirmation(getStage(), settings.getName(gameState.getCurrentPlayer()) + ", aceita o empate?", new ConfirmationListener() {
             @Override
@@ -159,17 +156,22 @@ public class GameController implements EventHandler<MouseEvent> {
                 toggleCurrentPlayer();
             }
         });
-        disableBackground(false);
     }
 
     public void onSurrenderClick() {
-        disableBackground(true);
         SceneManager.popUpConfirmation(getStage(), "Render-se?", new ConfirmationListener() {
             @Override
             public void onConfirmationAccepted() {
                 finishGame();
+                Player currentPlayer = gameState.getCurrentPlayer();
+
+                for (Piece piece : gameState.getPlayerPieces(currentPlayer))
+                    if (piece instanceof King)
+                        gameState.getPieceImageView(piece.getBoardPosition()).setRotate(90);
+
                 Player opponent = Player.getOpponent(gameState.getCurrentPlayer());
 
+                toggleLabelColor(opponent);
                 turnLabel.setText(settings.getName(opponent) + " venceu por desistência");
             }
 
@@ -178,7 +180,20 @@ public class GameController implements EventHandler<MouseEvent> {
 
             }
         });
-        disableBackground(false);
+    }
+
+    public void onExitClick() {
+        SceneManager.popUpConfirmation(getStage(), "Voltar para seleção de nomes?", new ConfirmationListener() {
+            @Override
+            public void onConfirmationAccepted() {
+                SceneManager.goToPlayers(getStage());
+            }
+
+            @Override
+            public void onConfirmationDenied() {
+
+            }
+        });
     }
 
     private void finishGame() {
@@ -202,14 +217,16 @@ public class GameController implements EventHandler<MouseEvent> {
                 Piece piece = Piece.create(i, j);
                 gameState.setPieceAt(piece, currentPosition);
 
-                if (piece != null)
-                    gameState.getPlayerPieces(piece.getPlayer()).add(piece);
-
-                ImageView pieceImageView = new ImageView();
+                ImageView pieceImageView = gameState.getPieceImageView(i, j);
+                if (pieceImageView == null)
+                    pieceImageView = new ImageView();
                 pieceImageView.setFitHeight(48);
                 pieceImageView.setFitWidth(48);
-                if (piece != null)
+                pieceImageView.setRotate(0);
+                if (piece != null) {
                     pieceImageView.setImage(piece.getPieceImage());
+                    gameState.getPlayerPieces(piece.getPlayer()).add(piece);
+                }
 
                 gameState.setPieceImageView(pieceImageView, currentPosition);
 
@@ -243,7 +260,11 @@ public class GameController implements EventHandler<MouseEvent> {
 
         Player currentPlayer = gameState.getCurrentPlayer();
         turnLabel.setText("Vez de " + settings.getName(currentPlayer));
-        turnLabel.setTextFill(currentPlayer == Player.WHITE ? Color.WHITE : Color.BLACK);
+        toggleLabelColor(currentPlayer);
+    }
+
+    private void toggleLabelColor(Player player) {
+        turnLabel.setTextFill(player == Player.WHITE ? Color.WHITE : Color.BLACK);
     }
 
     private void selectTile(Button clickedButton){
@@ -307,7 +328,8 @@ public class GameController implements EventHandler<MouseEvent> {
 
         toggleCurrentPlayer();
 
-        gameState.setDraw(Validator.draw());
+        DrawType draw = Validator.draw();
+        gameState.setDraw(draw != null);
         gameState.updateGameStatus();
 
         GameTurnLog gameTurnLog = new GameTurnLog(movedPiece, moveEvent);
@@ -319,6 +341,7 @@ public class GameController implements EventHandler<MouseEvent> {
         switch (gameState.getGameStatus()) {
             case CHECKMATTE -> {
                 playSound(SoundAlert.CHECKMATTE);
+                toggleLabelColor(whiteCheck ? Player.WHITE : Player.BLACK);
                 turnLabel.setText("CHECKMATTE");
                 alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Parabéns, " + (whiteCheck ? "Branco" : "Preto"));
@@ -327,10 +350,10 @@ public class GameController implements EventHandler<MouseEvent> {
             }
             case DRAW -> {
                 playSound(SoundAlert.DRAW);
-                turnLabel.setText("AFFOGATION DRAW");
+                turnLabel.setText("EMPATE");
                 alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Its a fucking draw");
-                alert.setContentText("AFFOGATION DRAWWW");
+                alert.setTitle("É um empate!");
+                alert.setContentText("Motivo: " + draw);
                 alert.show();
             }
             case CHECK -> {
@@ -340,6 +363,9 @@ public class GameController implements EventHandler<MouseEvent> {
             }
             case RUNNING -> playSound(moveEvent.hasCaptured() ? SoundAlert.CAPTURE : SoundAlert.MOVE);
         }
+
+        if (gameState.isGameOver())
+            finishGame();
     }
 
     private Stage getStage(){
@@ -348,7 +374,6 @@ public class GameController implements EventHandler<MouseEvent> {
 
     private void openPawnPromotionDialog(Piece movedPiece) {
         Stage stage = getStage();
-        disableBackground(true);
 
         double x = getBoardCenterX(stage);
         double y = getBoardCenterY(stage);
@@ -369,12 +394,6 @@ public class GameController implements EventHandler<MouseEvent> {
                 playSound(SoundAlert.PAWN_PROMOTION);
             }
         });
-
-        disableBackground(false);
-    }
-
-    private void disableBackground(boolean disable) {
-        getStage().getScene().getRoot().setDisable(disable);
     }
 
     private void playSound(SoundAlert soundAlert) {

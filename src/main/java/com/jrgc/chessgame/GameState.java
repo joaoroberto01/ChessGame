@@ -45,8 +45,10 @@ public class GameState {
     private final List<Piece> blackPieces = new ArrayList<>();
 
     private GameState(){
-        if (stateType == StateType.DEFAULT)
-            GameTurnLog.clearLog();
+        if (stateType == StateType.DEFAULT) {
+            gameTurnsLog.clear();
+            GameTurnLog.clearLogFile();
+        }
     }
 
     public static GameState getInstance(boolean reset){

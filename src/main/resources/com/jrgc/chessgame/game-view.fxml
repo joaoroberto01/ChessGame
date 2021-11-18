@@ -24,36 +24,43 @@
     </left>
 
     <right>
-        <VBox prefWidth="250" spacing="60">
-            <VBox spacing="20" alignment="CENTER">
-                <Label fx:id="turnLabel" id="turnLabel" />
+        <VBox prefWidth="250" spacing="20" alignment="TOP_CENTER">
+            <Label fx:id="turnLabel" id="turnLabel" textAlignment="CENTER" wrapText="true"/>
 
-                <HBox spacing="10">
-                    <Button text="Reiniciar" styleClass="image-button" onAction="#onResetClick">
-                        <graphic>
-                            <ImageView fitWidth="48" fitHeight="48">
-                                <Image url="@icons/reset.png"/>
-                            </ImageView>
-                        </graphic>
-                    </Button>
-                    <Button fx:id="drawButton" text="Sugerir Empate" styleClass="image-button" onAction="#onDrawSuggestClick">
-                        <graphic>
-                            <ImageView fitWidth="48" fitHeight="48">
-                                <Image url="@icons/draw.png"/>
-                            </ImageView>
-                        </graphic>
-                    </Button>
-                    <Button fx:id="surrenderButton" text="Rendição" styleClass="image-button" onAction="#onSurrenderClick">
-                        <graphic>
-                            <ImageView fitWidth="48" fitHeight="48">
-                                <Image url="@icons/surrender.png"/>
-                            </ImageView>
-                        </graphic>
-                    </Button>
-                </HBox>
-                <Button text="Check Case" onAction="#checkCase"/>
-                <Button text="CheckMatte Case" onAction="#checkmatteCase"/>
-            </VBox>
+            <HBox spacing="10">
+                <Button text="Reiniciar" styleClass="image-button" onAction="#onResetClick">
+                    <graphic>
+                        <ImageView fitWidth="48" fitHeight="48">
+                            <Image url="@icons/reset.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="drawButton" text="Sugerir Empate" styleClass="image-button"
+                        onAction="#onDrawSuggestClick">
+                    <graphic>
+                        <ImageView fitWidth="48" fitHeight="48">
+                            <Image url="@icons/draw.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="surrenderButton" text="Rendição" styleClass="image-button" onAction="#onSurrenderClick">
+                    <graphic>
+                        <ImageView fitWidth="48" fitHeight="48">
+                            <Image url="@icons/surrender.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <Button text="Voltar para seleção de nomes" styleClass="image-button" onAction="#onExitClick">
+                <graphic>
+                    <ImageView fitWidth="48" fitHeight="48">
+                        <Image url="@icons/exit.png"/>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <!--                <Button text="Check Case" onAction="#checkCase"/>-->
+            <!--                <Button text="CheckMatte Case" onAction="#checkmatteCase"/>-->
             <Accordion>
                 <panes>
                     <TitledPane text="Jogadas">
@@ -61,6 +68,8 @@
                     </TitledPane>
                 </panes>
             </Accordion>
+
+            <Label fx:id="timeLabel" />
         </VBox>
     </right>
 

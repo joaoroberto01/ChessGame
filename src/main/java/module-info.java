@@ -2,9 +2,9 @@ module com.jrgc.chessgame {
     requires javafx.controls;
     requires javafx.media;
     requires javafx.fxml;
+    requires com.google.gson;
 
-
-    opens com.jrgc.chessgame to javafx.fxml;
+    opens com.jrgc.chessgame to javafx.fxml, com.google.gson;
     exports com.jrgc.chessgame;
     exports com.jrgc.chessgame.models;
     opens com.jrgc.chessgame.models to javafx.fxml;

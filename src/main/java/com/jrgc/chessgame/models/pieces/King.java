@@ -4,6 +4,7 @@ import com.jrgc.chessgame.GameState;
 import com.jrgc.chessgame.models.game.BoardPosition;
 import com.jrgc.chessgame.models.game.MoveEvent;
 import com.jrgc.chessgame.models.game.Player;
+import com.jrgc.chessgame.utils.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,5 +77,21 @@ public class King extends Piece {
             return MoveEvent.CastlingType.NONE;
 
         return stepColumn == -1 ? MoveEvent.CastlingType.LONG : MoveEvent.CastlingType.SHORT;
+    }
+
+    public static String getRule(){
+        return """
+                O rei se movimenta em todas as direções (diagonal, vertical ou horizontal), limitado a apenas uma casa,
+                desde que estejam desobstruídas.
+                
+                O rei pode fazer um movimento especial chamado "roque" com a torre desde que:
+                - Nenhuma das duas peças tenha sido movimentada durante a partida;
+                - Não haja nenhuma peça amiga entre o rei e a torre;
+                - Nenhuma das casas pelas quais o rei irá passar ou ficar esteja sob ataque de peça inimiga.
+
+                Podendo ser feito o roque pequeno (torre do lado do rei) ou o grande (torre do lado da rainha).
+
+                O rei pode capturar qualquer peça adversária com exceção do rei adversário.
+                Um rei deverá manter distância mínima de duas casas do outro rei, senão será considerado um lance irregular.""";
     }
 }
