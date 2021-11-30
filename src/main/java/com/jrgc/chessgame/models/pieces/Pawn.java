@@ -2,7 +2,8 @@ package com.jrgc.chessgame.models.pieces;
 
 import com.jrgc.chessgame.GameState;
 import com.jrgc.chessgame.models.game.BoardPosition;
-import com.jrgc.chessgame.models.game.GameTurnLog;
+import com.jrgc.chessgame.models.game.log.GameTurn;
+import com.jrgc.chessgame.models.game.log.MatchLog;
 import com.jrgc.chessgame.models.game.MoveEvent;
 import com.jrgc.chessgame.models.game.Player;
 
@@ -49,28 +50,28 @@ public class Pawn extends Piece {
 
         BoardPosition delta = from.delta(to);
         if (getPlayer() == Player.BLACK)
-            delta.line = -delta.line;
+            delta.row = -delta.row;
 
-        BoardPosition target = new BoardPosition(from.line, from.column);
-        for (int i = 0; i < delta.line; i++) {
-            target.line += getPlayer() == Player.BLACK ? 1 : -1;
+        BoardPosition target = new BoardPosition(from.row, from.column);
+        for (int i = 0; i < delta.row; i++) {
+            target.row += getPlayer() == Player.BLACK ? 1 : -1;
 
             Piece piece = gameState.getPieceAt(target);
             if (piece != null)
                 verticalFree = false;
         }
 
-        return (destinationPiece == null && verticalFree && delta.column == 0 && delta.line > 0 && delta.line <= range)
-                || (playersDiff && Math.abs(delta.column) == 1 && delta.line == 1) || enPassantCapture(from, to) != null;
+        return (destinationPiece == null && verticalFree && delta.column == 0 && delta.row > 0 && delta.row <= range)
+                || (playersDiff && Math.abs(delta.column) == 1 && delta.row == 1) || enPassantCapture(from, to) != null;
     }
 
     public Piece enPassantCapture(BoardPosition from, BoardPosition to) {
-        List<GameTurnLog> gameTurnLogs = GameState.getGameTurnsLog();
-        if (gameTurnLogs.isEmpty())
+        List<GameTurn> gameTurns = GameState.getGameTurnsLog();
+        if (gameTurns.isEmpty())
             return null;
 
-        int lastIndex = gameTurnLogs.size() - 1;
-        GameTurnLog lastTurn = gameTurnLogs.get(lastIndex);
+        int lastIndex = gameTurns.size() - 1;
+        GameTurn lastTurn = gameTurns.get(lastIndex);
 
         if (lastTurn.getPiece().getPieceType() != PieceType.PAWN)
             return null;
@@ -82,14 +83,14 @@ public class Pawn extends Piece {
 
         BoardPosition delta = from.delta(to);
         if (getPlayer() == Player.BLACK)
-            delta.line = -delta.line;
+            delta.row = -delta.row;
 
-        boolean horizontalLastMove = Math.abs(lastMoveDelta.line) == 2 && lastMoveDelta.column == 0;
-        boolean diagonalMove = Math.abs(delta.line) == Math.abs(delta.column) && delta.line == 1;
-        boolean destinationIsBehind = to.column == lastMoveDestination.column && to.line != lastMoveDestination.line &&
-                BoardPosition.isInRange(to.line, lastMoveDestination.line, getPlayer() == Player.WHITE ? 0 : 7);
+        boolean lastMoveVertical = Math.abs(lastMoveDelta.row) == 2 && lastMoveDelta.column == 0;
+        boolean diagonalMove = Math.abs(delta.row) == Math.abs(delta.column) && delta.row == 1;
+        boolean destinationIsBehind = to.column == lastMoveDestination.column && to.row != lastMoveDestination.row &&
+                BoardPosition.isInRange(to.row, lastMoveDestination.row, lastMoveDestination.row + (getPlayer() == Player.WHITE ? -1 : 1));
 
-        return horizontalLastMove && diagonalMove && destinationIsBehind ? lastTurn.getPiece() : null;
+        return lastMoveVertical && diagonalMove && destinationIsBehind ? lastTurn.getPiece() : null;
     }
 
     public static String getRule(){

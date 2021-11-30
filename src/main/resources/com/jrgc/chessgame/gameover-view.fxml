@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+<VBox alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml" fx:controller="com.jrgc.chessgame.controllers.GameOverController">
+    <padding>
+        <Insets topRightBottomLeft="20" />
+    </padding>
+
+    <Text fx:id="gameOverLabel" textAlignment="CENTER" wrappingWidth="300" style="-fx-font-size: 12pt; -fx-font-weight: bold" />
+
+    <Button text="Fechar" onAction="#onCloseClick"/>
+
+    <stylesheets>
+        <URL value="@styles/dialog.css"/>
+    </stylesheets>
+</VBox>

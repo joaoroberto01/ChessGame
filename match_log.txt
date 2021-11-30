@@ -1,4 +1,0 @@
-White Pawn: E2 -> E4
-Black Pawn: F7 -> F5
-White Pawn: D2 -> D4
-Black Pawn: F5 -> E4

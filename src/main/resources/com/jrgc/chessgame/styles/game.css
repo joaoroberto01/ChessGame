@@ -1,6 +1,9 @@
 #root {
-    /*-fx-background-color: #D6B450;*/
     -fx-background-color: rgb(223, 200, 140);
+}
+
+#simulateRoot{
+    -fx-background-color: lightblue;
 }
 
 .light-tile.brown {
@@ -50,6 +53,20 @@
 #turnLabel {
     -fx-font-size: 14pt;
     -fx-font-weight: bolder;
+}
+
+.timerLabel {
+    -fx-font-size: 16pt;
+    /*-fx-padding: 10px;
+    -fx-background-color: white;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 2px;
+    -fx-border-color: black;*/
+}
+
+#whiteTimer {
+    -fx-fill: white;
 }
 
 .image-button{

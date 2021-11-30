@@ -3,38 +3,47 @@ package com.jrgc.chessgame.models.game;
 import com.jrgc.chessgame.utils.BoardUtils;
 
 public class BoardPosition {
-    public int line, column;
+    public int row, column;
 
-    public BoardPosition(int line, int column) {
-        this.line = line;
+    public BoardPosition(int row, int column) {
+        this.row = row;
         this.column = column;
     }
 
     public BoardPosition delta(BoardPosition boardPosition){
-        return new BoardPosition(line - boardPosition.line, column - boardPosition.column);
+        return new BoardPosition(row - boardPosition.row, column - boardPosition.column);
     }
 
     public BoardPosition deltaAbs(BoardPosition boardPosition){
-        int line = Math.abs(this.line - boardPosition.line);
+        int row = Math.abs(this.row - boardPosition.row);
         int column = Math.abs(this.column - boardPosition.column);
 
-        return new BoardPosition(line, column);
+        return new BoardPosition(row, column);
+    }
+
+    public String formattedRow(){
+        int number = Math.abs(row - BoardUtils.BOARD_SIZE);
+        //int number = Math.abs(row - (BoardUtils.BOARD_SIZE - 1)) + 1;
+
+        return String.valueOf(number);
+    }
+
+    public String formattedColumn(){
+        return String.format("%c", column + 97);
     }
 
     public String toFormattedString(){
-        int number = Math.abs(line - (BoardUtils.BOARD_SIZE - 1)) + 1;
-
-        return String.format("%c%d", column + 65, number);
+        return formattedColumn() + formattedRow();
     }
 
     public boolean isBetweenPositions(BoardPosition start, BoardPosition end){
         BoardPosition delta = start.deltaAbs(end);
-        if (delta.column == delta.line)
-            return isInRange(this.line, start.line, end.line) && isInRange(this.column, start.column, end.column);
+        if (delta.column == delta.row)
+            return isInRange(this.row, start.row, end.row) && isInRange(this.column, start.column, end.column);
         else if (delta.column == 0)
-            return this.column == start.column && isInRange(this.line, start.line, end.line);
-        else if (delta.line == 0)
-            return this.line == start.line && isInRange(this.column, start.column, end.column);
+            return this.column == start.column && isInRange(this.row, start.row, end.row);
+        else if (delta.row == 0)
+            return this.row == start.row && isInRange(this.column, start.column, end.column);
 
         return false;
     }
@@ -50,13 +59,13 @@ public class BoardPosition {
 
         BoardPosition that = (BoardPosition) o;
 
-        return line == that.line && column == that.column;
+        return row == that.row && column == that.column;
     }
 
     @Override
     public String toString() {
         return "BoardPosition{" +
-                "line=" + line +
+                "row=" + row +
                 ", column=" + column +
                 '}';
     }

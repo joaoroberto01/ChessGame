@@ -5,9 +5,7 @@ import com.jrgc.chessgame.models.game.Player;
 import com.jrgc.chessgame.models.pieces.Piece;
 import com.jrgc.chessgame.utils.SceneManager;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -24,7 +22,7 @@ public class PreGameController {
     private ChoiceBox<Settings.PieceStyle> pieceStyleChoiceBox;
 
     @FXML
-    private CheckBox soundCheckBox;
+    private CheckBox soundCheckBox, timeCheckBox, pathCheckBox;
 
     private final Settings settings = Settings.getInstance();
 
@@ -49,11 +47,25 @@ public class PreGameController {
             settings.setSoundOn(soundCheckBox.isSelected());
         });
         soundCheckBox.setSelected(settings.isSoundOn());
+
+        timeCheckBox.setOnAction(event -> {
+            settings.setTimeOn(timeCheckBox.isSelected());
+        });
+        timeCheckBox.setSelected(settings.isTimeOn());
+
+        pathCheckBox.setOnAction(event -> {
+            settings.setShowPath(pathCheckBox.isSelected());
+        });
+        pathCheckBox.setSelected(settings.shouldShowPath());
     }
 
     public void onStartClick(){
         settings.exportSettings();
         SceneManager.goToGame(getRoot());
+    }
+
+    public void onSimulateClick() {
+        SceneManager.goToSimulateGame(getRoot());
     }
 
     public void onBackClick() {

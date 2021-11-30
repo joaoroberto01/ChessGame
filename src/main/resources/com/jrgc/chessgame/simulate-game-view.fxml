@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.jrgc.chessgame.controllers.SimulateGameController"
+            id="simulateRoot">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <left>
+        <VBox spacing="10">
+            <HBox spacing="30">
+                <Label styleClass="boardIndicator" text=" 8 7 6 5 4 3 2 1" prefWidth="1" minWidth="1" maxWidth="1"
+                       wrapText="true"/>
+                <GridPane fx:id="boardGridView"/>
+            </HBox>
+            <Label styleClass="boardIndicator"
+                   text="          A          B         C         D         E          F          G          H"/>
+        </VBox>
+    </left>
+
+    <right>
+        <VBox prefWidth="250" spacing="30" alignment="TOP_CENTER">
+            <Label fx:id="turnLabel" prefHeight="50" id="turnLabel" alignment="CENTER" textAlignment="CENTER" wrapText="true"/>
+
+            <VBox spacing="10" alignment="CENTER">
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="nextMoveButton" text="Próxima Jogada" styleClass="image-button" disable="true" onAction="#onNextMove">
+                        <graphic>
+                            <ImageView fitWidth="48" fitHeight="48">
+                                <Image url="@icons/next.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Button text="Carregar Partida" styleClass="image-button" onAction="#onLoadGame">
+                        <graphic>
+                            <ImageView fitWidth="48" fitHeight="48">
+                                <Image url="@icons/load.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
+                <Button text="Voltar" styleClass="image-button" onAction="#onBackClick">
+                    <graphic>
+                        <ImageView fitWidth="48" fitHeight="48">
+                            <Image url="@icons/exit.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </VBox>
+
+
+            <VBox alignment="CENTER" spacing="20">
+                <padding>
+                    <Insets top="30"/>
+                </padding>
+
+                <Accordion>
+                    <panes>
+                        <TitledPane text="Jogadas">
+                            <ListView fx:id="gameLogListView"/>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+            </VBox>
+        </VBox>
+    </right>
+
+    <stylesheets>
+        <URL value="@styles/game.css"/>
+    </stylesheets>
+</BorderPane>

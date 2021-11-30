@@ -46,7 +46,7 @@ public class King extends Piece {
         BoardPosition delta = getBoardPosition().deltaAbs(to);
         BoardPosition from = getBoardPosition();
 
-        if (delta.line != 0 || delta.column != 2)
+        if (delta.row != 0 || delta.column != 2)
             return MoveEvent.CastlingType.NONE;
 
         int stepColumn = - Integer.compare(from.column, to.column);
@@ -55,7 +55,7 @@ public class King extends Piece {
         Player opponent = Player.getOpponent(getPlayer());
         List<Piece> opponentPieces = gameState.getPlayerPieces(opponent);
 
-        BoardPosition target = new BoardPosition(from.line, from.column);
+        BoardPosition target = new BoardPosition(from.row, from.column);
         for (int i = 0; i < range; i++) {
             target.column += stepColumn;
 

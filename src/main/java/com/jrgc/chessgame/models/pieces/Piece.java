@@ -8,6 +8,7 @@ import com.jrgc.chessgame.models.game.BoardPosition;
 import com.jrgc.chessgame.models.game.Player;
 import javafx.scene.image.Image;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,15 @@ public abstract class Piece {
             };
         }
 
+        public String toLetter(){
+            if (this == KNIGHT)
+                return "N";
+            if (this == PAWN)
+                return "";
+
+            return toString().charAt(0) + "";
+        }
+
         @Override
         public String toString() {
             return name().substring(0, 1).toUpperCase() + name().substring(1).toLowerCase();
@@ -89,8 +99,8 @@ public abstract class Piece {
         return boardPosition;
     }
 
-    public void setBoardPosition(int line, int column) {
-        boardPosition.line = line;
+    public void setBoardPosition(int row, int column) {
+        boardPosition.row = row;
         boardPosition.column = column;
     }
 
@@ -99,7 +109,7 @@ public abstract class Piece {
     }
 
     public void setPossibleMoves(){
-        final List<BoardPosition> possibleMoves = new ArrayList<>();
+        possibleMoves.clear();
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
                 BoardPosition to = new BoardPosition(i, j);
@@ -107,7 +117,6 @@ public abstract class Piece {
                     possibleMoves.add(to);
             }
         }
-        this.possibleMoves = possibleMoves;
     }
 
     public static Piece create(int i, int j){
@@ -138,7 +147,8 @@ public abstract class Piece {
         String path = "images/" + folder + pieceType.toString().toLowerCase();
         path += player == Player.WHITE ? "_white.png" : "_black.png";
 
-        return new Image(ChessApplication.class.getResourceAsStream(path));
+        InputStream imageInputStream = ChessApplication.class.getResourceAsStream(path);
+        return imageInputStream != null ? new Image(imageInputStream) : null;
     }
 
     public boolean cantPreventCheckmatte(BoardPosition to){
@@ -173,7 +183,7 @@ public abstract class Piece {
     }
 
     protected Piece copy(PieceType pieceType){
-        BoardPosition boardPosition = new BoardPosition(getBoardPosition().line, getBoardPosition().column);
+        BoardPosition boardPosition = new BoardPosition(getBoardPosition().row, getBoardPosition().column);
 
         return switch (pieceType){
             case PAWN -> new Pawn(player, boardPosition);
@@ -191,7 +201,6 @@ public abstract class Piece {
 
     @Override
     public String toString() {
-        //return player + " " + pieceType + "{boardPosition=" + boardPosition.toFormattedString() + "}";
         String name = "";
         if (player == Player.WHITE)
             name += "W.";

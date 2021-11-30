@@ -18,4 +18,6 @@ module com.jrgc.chessgame {
     opens com.jrgc.chessgame.utils to javafx.fxml;
     exports com.jrgc.chessgame.models.game;
     opens com.jrgc.chessgame.models.game to javafx.fxml;
+    exports com.jrgc.chessgame.models.game.log;
+    opens com.jrgc.chessgame.models.game.log to javafx.fxml;
 }

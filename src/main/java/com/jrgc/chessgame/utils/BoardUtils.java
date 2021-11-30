@@ -32,8 +32,9 @@ public class BoardUtils {
             return moveEvent;
 
         gameState = GameState.getInstance();
-
         moveEvent.setSuccess(true);
+
+        Player currentPlayer = sourcePiece.getPlayer();
 
         Image sourceImage = gameState.getPieceImageView(from).getImage();
 
@@ -45,10 +46,10 @@ public class BoardUtils {
             moveEvent.setCastlingType(castlingType);
 
             if (castlingType != MoveEvent.CastlingType.NONE) {
-                int playerLine = sourcePiece.getPlayer() == Player.WHITE ? 7 : 0;
+                int playerRow = currentPlayer == Player.WHITE ? 7 : 0;
                 int rookColumn = castlingType == MoveEvent.CastlingType.SHORT ? 7 : 0;
 
-                Piece rook = gameState.getPieceAt(playerLine, rookColumn);
+                Piece rook = gameState.getPieceAt(playerRow, rookColumn);
 
                 if (rook != null) {
                     gameState.setPieceAt((Piece) null, rook.getBoardPosition());
@@ -65,9 +66,22 @@ public class BoardUtils {
             }
         }
 
+        for (Piece otherPiece : gameState.getPlayerPieces(currentPlayer)){
+            if (sourcePiece.getPieceType() == otherPiece.getPieceType() && !sourcePiece.equals(otherPiece) &&
+                    otherPiece.canMove(moveEvent.getDestination())) {
+                BoardPosition otherPiecePosition = otherPiece.getBoardPosition();
+                BoardPosition piecePosition = moveEvent.getSource();
+
+                moveEvent.setAmbiguitityType(piecePosition.column == otherPiecePosition.column ?
+                        MoveEvent.AmbiguitityType.COLUMN : MoveEvent.AmbiguitityType.ROW);
+
+                break;
+            }
+        }
+
         gameState.setPieceAt(sourcePiece, to);
         gameState.getPieceImageView(to).setImage(sourceImage);
-        sourcePiece.setBoardPosition(to.line, to.column);
+        sourcePiece.setBoardPosition(to.row, to.column);
 
         gameState.setPieceAt((Piece) null, from);
         gameState.getPieceImageView(from).setImage(null);
@@ -82,7 +96,7 @@ public class BoardUtils {
                 gameState.setPieceAt((Piece) null, enPassantPiece.getBoardPosition());
                 gameState.getPieceImageView(enPassantPiece.getBoardPosition()).setImage(null);
             }
-            moveEvent.setPawnPromoted(to.line == 0 || to.line == 7);
+            moveEvent.setPawnPromoted(to.row == 0 || to.row == 7);
         }
 
         if (moveEvent.hasCaptured()) {

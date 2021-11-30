@@ -15,12 +15,19 @@ public class Settings {
     private static Settings settings;
 
     public enum PieceStyle {
-        CLASSIC, PIXEL;
+        CLASSIC, PIXEL, PROGRAMMING, POKEMON;
 
         public String getPath(){
+            return super.toString().toLowerCase().concat("/");
+        }
+
+        @Override
+        public String toString() {
             return switch (this){
-                case CLASSIC -> "classic/";
-                case PIXEL -> "pixel/";
+                case CLASSIC -> "Clássico";
+                case PIXEL -> "Pixel";
+                case PROGRAMMING -> "Programação";
+                case POKEMON -> "Pokémon";
             };
         }
     }
@@ -28,13 +35,20 @@ public class Settings {
     public enum BoardStyle {
         BROWN, GRAY;
 
+        public String toStyleString(){
+            return super.toString().toLowerCase();
+        }
+
         @Override
         public String toString() {
-            return super.toString().toLowerCase();
+            return switch (this){
+                case BROWN -> "Marrom";
+                case GRAY -> "Cinza";
+            };
         }
     }
 
-    private boolean soundOn = false;
+    private boolean soundOn = false, timeOn = true, showPath = true;
     private PieceStyle pieceStyle = PieceStyle.PIXEL;
     private BoardStyle boardStyle = BoardStyle.BROWN;
     private final String[] names = new String[2];
@@ -58,6 +72,22 @@ public class Settings {
         this.soundOn = soundOn;
     }
 
+    public boolean isTimeOn() {
+        return timeOn;
+    }
+
+    public void setTimeOn(boolean timeOn) {
+        this.timeOn = timeOn;
+    }
+
+    public boolean shouldShowPath() {
+        return showPath;
+    }
+
+    public void setShowPath(boolean showPath) {
+        this.showPath = showPath;
+    }
+
     public PieceStyle getPieceStyle() {
         return pieceStyle;
     }
@@ -75,8 +105,7 @@ public class Settings {
     }
 
     public void setName(Player player, String name){
-        int index = player == Player.WHITE ? 0 : 1;
-        names[index] = name;
+        names[player.getIndex()] = name;
     }
 
     public String getName(Player player){
@@ -103,14 +132,13 @@ public class Settings {
             String settingsString = new String(Base64.getDecoder().decode(bufferedReader.readLine()), StandardCharsets.UTF_8);
             bufferedReader.close();
 
-            System.out.println(settingsString);
-
             if (settingsString.isEmpty())
                 return;
 
             JsonObject jsonSettings = (JsonObject) JsonParser.parseString(settingsString);
 
             settings.setSoundOn(jsonSettings.get("soundOn").getAsBoolean());
+            settings.setTimeOn(jsonSettings.get("timeOn").getAsBoolean());
 
             PieceStyle pieceStyle;
             try {
@@ -135,6 +163,6 @@ public class Settings {
 
             if (!names.get(1).isJsonNull())
                 settings.setName(Player.BLACK, names.get(1).getAsString());
-        } catch (IOException ignored) {}
+        } catch (IOException|NullPointerException ignored) {}
     }
 }

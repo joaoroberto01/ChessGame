@@ -18,6 +18,10 @@ public enum Player {
         return current == WHITE ? BLACK : WHITE;
     }
 
+    public int getIndex(){
+        return this == Player.WHITE ? 0 : 1;
+    }
+
     @Override
     public String toString() {
         return name().substring(0, 1).toUpperCase() + name().substring(1).toLowerCase();

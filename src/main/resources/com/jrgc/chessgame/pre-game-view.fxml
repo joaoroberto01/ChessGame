@@ -37,46 +37,52 @@
                 <panes>
                     <TitledPane id="helpTitlePane" text="Regras" textAlignment="CENTER">
                         <GridPane id="help" vgap="20" hgap="20" alignment="CENTER" styleClass="background">
-                            <Button text="Rei" onAction="#onKingRuleClick" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                            <Button text="Rei" onAction="#onKingRuleClick" GridPane.rowIndex="0"
+                                    GridPane.columnIndex="0">
                                 <graphic>
                                     <ImageView fitWidth="32" fitHeight="32">
-                                        <Image url="@images/pixel/king_white.png" />
+                                        <Image url="@images/pixel/king_white.png"/>
                                     </ImageView>
                                 </graphic>
                             </Button>
-                            <Button text="Rainha" onAction="#onQueenRuleClick" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                            <Button text="Rainha" onAction="#onQueenRuleClick" GridPane.rowIndex="0"
+                                    GridPane.columnIndex="1">
                                 <graphic>
                                     <ImageView fitWidth="32" fitHeight="32">
-                                        <Image url="@images/pixel/queen_white.png" />
+                                        <Image url="@images/pixel/queen_white.png"/>
                                     </ImageView>
                                 </graphic>
                             </Button>
-                            <Button text="Torre" onAction="#onRookRuleClick" GridPane.rowIndex="0" GridPane.columnIndex="2">
+                            <Button text="Torre" onAction="#onRookRuleClick" GridPane.rowIndex="0"
+                                    GridPane.columnIndex="2">
                                 <graphic>
                                     <ImageView fitWidth="32" fitHeight="32">
-                                        <Image url="@images/pixel/rook_white.png" />
+                                        <Image url="@images/pixel/rook_white.png"/>
                                     </ImageView>
                                 </graphic>
                             </Button>
-                            <Button text="Cavalo" onAction="#onKnightRuleClick" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                            <Button text="Cavalo" onAction="#onKnightRuleClick" GridPane.rowIndex="1"
+                                    GridPane.columnIndex="0">
                                 <graphic>
                                     <ImageView fitWidth="32" fitHeight="32">
-                                        <Image url="@images/pixel/knight_white.png" />
+                                        <Image url="@images/pixel/knight_white.png"/>
                                     </ImageView>
                                 </graphic>
                             </Button>
-                            <Button text="Bispo" onAction="#onBishopRuleClick" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                            <Button text="Bispo" onAction="#onBishopRuleClick" GridPane.rowIndex="1"
+                                    GridPane.columnIndex="1">
                                 <graphic>
                                     <ImageView fitWidth="32" fitHeight="32">
-                                        <Image url="@images/pixel/bishop_white.png" />
+                                        <Image url="@images/pixel/bishop_white.png"/>
                                     </ImageView>
                                 </graphic>
                             </Button>
 
-                            <Button text="Peão" onAction="#onPawnRuleClick" GridPane.rowIndex="1" GridPane.columnIndex="2">
+                            <Button text="Peão" onAction="#onPawnRuleClick" GridPane.rowIndex="1"
+                                    GridPane.columnIndex="2">
                                 <graphic>
                                     <ImageView fitWidth="32" fitHeight="32">
-                                        <Image url="@images/pixel/pawn_white.png" />
+                                        <Image url="@images/pixel/pawn_white.png"/>
                                     </ImageView>
                                 </graphic>
                             </Button>
@@ -102,14 +108,18 @@
 
             <CheckBox fx:id="soundCheckBox" text="Som"/>
             <CheckBox fx:id="timeCheckBox" text="Tempo"/>
+            <CheckBox fx:id="pathCheckBox" text="Mostrar caminho das peças"/>
         </VBox>
     </right>
 
     <bottom>
-        <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text="Voltar" onAction="#onBackClick" />
-            <Button text="Iniciar Partida" onAction="#onStartClick" />
-        </HBox>
+        <VBox spacing="30" alignment="CENTER_RIGHT">
+            <Button text="Simulador de Partida" onAction="#onSimulateClick"/>
+            <HBox spacing="20" alignment="CENTER_RIGHT">
+                <Button text="Voltar" onAction="#onBackClick"/>
+                <Button text="Iniciar Partida" onAction="#onStartClick"/>
+            </HBox>
+        </VBox>
     </bottom>
 
     <stylesheets>

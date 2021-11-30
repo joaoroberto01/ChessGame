@@ -21,10 +21,10 @@ public class Knight extends Piece {
 
         BoardPosition deltaPosition = getBoardPosition().deltaAbs(to);
 
-        if (deltaPosition.line == 0 || deltaPosition.line > 2 || deltaPosition.column == 0 || deltaPosition.column > 2)
+        if (deltaPosition.row == 0 || deltaPosition.row > 2 || deltaPosition.column == 0 || deltaPosition.column > 2)
             return false;
 
-        int deltaDiff = Math.abs(deltaPosition.line - deltaPosition.column);
+        int deltaDiff = Math.abs(deltaPosition.row - deltaPosition.column);
         return deltaDiff == 1 && (destinationPiece == null || playersDiff);
     }
 

@@ -1,7 +1,8 @@
 package com.jrgc.chessgame.utils;
 
 import com.jrgc.chessgame.models.game.DrawType;
-import com.jrgc.chessgame.models.game.GameTurnLog;
+import com.jrgc.chessgame.models.game.log.GameTurn;
+import com.jrgc.chessgame.models.game.log.MatchLog;
 import com.jrgc.chessgame.models.pieces.King;
 import com.jrgc.chessgame.models.pieces.Pawn;
 import com.jrgc.chessgame.models.pieces.Piece;
@@ -18,11 +19,11 @@ public class Validator {
         BoardPosition from = currentPiece.getBoardPosition();
         BoardPosition delta = from.deltaAbs(to);
 
-        if (delta.column == delta.line) {
-            int stepLine = - Integer.compare(from.line, to.line);
+        if (delta.column == delta.row) {
+            int steprow = - Integer.compare(from.row, to.row);
             int stepColumn = - Integer.compare(from.column, to.column);
 
-            return walkThrough(currentPiece, to, range, stepLine, stepColumn);
+            return walkThrough(currentPiece, to, range, steprow, stepColumn);
         }
 
         return false;
@@ -32,17 +33,17 @@ public class Validator {
         BoardPosition from = currentPiece.getBoardPosition();
         BoardPosition delta = from.deltaAbs(to);
 
-        if (delta.column == 0 || delta.line == 0) {
-            int stepLine = - Integer.compare(from.line, to.line);
+        if (delta.column == 0 || delta.row == 0) {
+            int steprow = - Integer.compare(from.row, to.row);
             int stepColumn = - Integer.compare(from.column, to.column);
 
-            return walkThrough(currentPiece, to, range, stepLine, stepColumn);
+            return walkThrough(currentPiece, to, range, steprow, stepColumn);
         }
 
         return false;
     }
 
-    private static boolean walkThrough(Piece currentPiece, BoardPosition to, int range, int stepLine, int stepColumn){
+    private static boolean walkThrough(Piece currentPiece, BoardPosition to, int range, int steprow, int stepColumn){
         GameState gameState = GameState.getInstance();
 
         Piece destinationPiece = gameState.getPieceAt(to);
@@ -50,15 +51,15 @@ public class Validator {
 
         BoardPosition from = currentPiece.getBoardPosition();
 
-        BoardPosition target = new BoardPosition(from.line, from.column);
+        BoardPosition target = new BoardPosition(from.row, from.column);
         for (int i = 0; i < range; i++) {
-            target.line += stepLine;
+            target.row += steprow;
             target.column += stepColumn;
 
             Piece piece = gameState.getPieceAt(target);
             if (target.equals(to))
                 return piece == null || playersDiff;
-            else if (piece != null || (target.line == 0 && stepLine != 0) || (target.column == 0 && stepColumn != 0))
+            else if (piece != null || (target.row == 0 && steprow != 0) || (target.column == 0 && stepColumn != 0))
                 return false;
         }
 
@@ -170,11 +171,11 @@ public class Validator {
 
         int moves = 0;
 
-        for (GameTurnLog gameTurnLog : GameState.getGameTurnsLog()) {
-            if (++moves >= 10)
+        for (GameTurn gameTurn : GameState.getGameTurnsLog()) {
+            if (++moves >= 50)
                 return DrawType.FIFTY_MOVES;
 
-            if (gameTurnLog.getMoveEvent().hasCaptured() || gameTurnLog.getPiece() instanceof Pawn)
+            if (gameTurn.getMoveEvent().hasCaptured() || gameTurn.getPiece() instanceof Pawn)
                 moves = 0;
         }
 
@@ -184,7 +185,7 @@ public class Validator {
         return null;
     }
 
-    private static boolean insufficientMaterial(Player player){
+    public static boolean insufficientMaterial(Player player){
         GameState gameState = GameState.getInstance();
         List<Piece> pieces = gameState.getPlayerPieces(player);
 

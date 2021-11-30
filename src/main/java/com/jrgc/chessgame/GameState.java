@@ -1,6 +1,10 @@
 package com.jrgc.chessgame;
 
-import com.jrgc.chessgame.models.game.*;
+import com.jrgc.chessgame.models.game.BoardPosition;
+import com.jrgc.chessgame.models.game.GameStatus;
+import com.jrgc.chessgame.models.game.Player;
+import com.jrgc.chessgame.models.game.log.GameTurn;
+import com.jrgc.chessgame.models.game.log.MatchLog;
 import com.jrgc.chessgame.models.pieces.Piece;
 import javafx.scene.image.ImageView;
 
@@ -10,20 +14,6 @@ import java.util.List;
 import static com.jrgc.chessgame.utils.BoardUtils.BOARD_SIZE;
 
 public class GameState {
-    //TODO REMOVE
-    public void boardLog() {
-        System.out.println(stateType);
-        for (int i = 0; i < BOARD_SIZE; i++){
-            for (int j = 0; j < BOARD_SIZE; j++){
-                if (board[i][j] == null)
-                    System.out.print("---- ");
-                else
-                    System.out.print(board[i][j] + " ");
-            }
-            System.out.println("");
-        }
-    }
-
     public enum StateType {
         DEFAULT, POSSIBILITY;
     }
@@ -32,7 +22,7 @@ public class GameState {
     private static GameStatus gameStatus = GameStatus.RUNNING;
     private static StateType stateType = StateType.DEFAULT;
 
-    private static final List<GameTurnLog> gameTurnsLog = new ArrayList<>();
+    private static final List<GameTurn> gameTurnsLog = new ArrayList<>();
 
     private final Piece[][] board = new Piece[BOARD_SIZE][BOARD_SIZE];
     private final ImageView[][] boardImageViews = new ImageView[BOARD_SIZE][BOARD_SIZE];
@@ -47,7 +37,7 @@ public class GameState {
     private GameState(){
         if (stateType == StateType.DEFAULT) {
             gameTurnsLog.clear();
-            GameTurnLog.clearLogFile();
+            MatchLog.resetLog();
         }
     }
 
@@ -73,7 +63,7 @@ public class GameState {
         possibilityState = stateType == StateType.POSSIBILITY ? copyMainState() : null;
     }
 
-    public static List<GameTurnLog> getGameTurnsLog() {
+    public static List<GameTurn> getGameTurnsLog() {
         return gameTurnsLog;
     }
 
@@ -148,7 +138,7 @@ public class GameState {
     public Piece getPieceAt(BoardPosition boardPosition) {
         if (boardPosition == null)
             return null;
-        return board[boardPosition.line][boardPosition.column];
+        return board[boardPosition.row][boardPosition.column];
     }
 
     public Piece getPieceAt(int i, int j){
@@ -157,8 +147,8 @@ public class GameState {
 
     public void setPieceAt(Piece sourcePiece, BoardPosition boardPosition){
         if (sourcePiece != null)
-            sourcePiece.setBoardPosition(boardPosition.line, boardPosition.column);
-        board[boardPosition.line][boardPosition.column] = sourcePiece;
+            sourcePiece.setBoardPosition(boardPosition.row, boardPosition.column);
+        board[boardPosition.row][boardPosition.column] = sourcePiece;
     }
 
     public void setPieceAt(BoardPosition piecePosition, BoardPosition destination){
@@ -168,7 +158,7 @@ public class GameState {
     }
 
     public ImageView getPieceImageView(BoardPosition boardPosition){
-        return boardImageViews[boardPosition.line][boardPosition.column];
+        return boardImageViews[boardPosition.row][boardPosition.column];
     }
 
     public ImageView getPieceImageView(int i, int j){
@@ -176,7 +166,7 @@ public class GameState {
     }
 
     public void setPieceImageView(ImageView pieceImageView, BoardPosition boardPosition){
-        boardImageViews[boardPosition.line][boardPosition.column] = pieceImageView;
+        boardImageViews[boardPosition.row][boardPosition.column] = pieceImageView;
     }
 
     private static GameState copyMainState(){

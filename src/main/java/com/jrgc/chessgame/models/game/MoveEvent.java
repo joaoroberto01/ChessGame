@@ -4,13 +4,21 @@ import com.jrgc.chessgame.models.pieces.Piece;
 
 public class MoveEvent {
 
+
+
     public enum CastlingType {
         NONE, SHORT, LONG;
     }
 
+    public enum AmbiguitityType {
+        NONE, ROW, COLUMN;
+    }
+
     private final BoardPosition source, destination;
-    private boolean success, pawnPromoted;
+    private boolean success, check, checkmatte, pawnPromoted;
+    private AmbiguitityType ambiguitityType;
     private Piece capturedPiece;
+    private Piece.PieceType promotedPiece, movedPiece;
 
     private CastlingType castlingType = CastlingType.NONE;
 
@@ -47,6 +55,38 @@ public class MoveEvent {
         this.capturedPiece = capturedPiece;
     }
 
+    public Piece.PieceType getPromotedPiece() {
+        return promotedPiece;
+    }
+
+    public void setPromotedPiece(Piece.PieceType promotedPiece) {
+        this.promotedPiece = promotedPiece;
+    }
+
+    public Piece.PieceType getMovedPiece() {
+        return movedPiece;
+    }
+
+    public void setMovedPiece(Piece.PieceType movedPiece) {
+        this.movedPiece = movedPiece;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
+
+    public boolean isCheckmatte() {
+        return checkmatte;
+    }
+
+    public void setCheckmatte(boolean checkmatte) {
+        this.checkmatte = checkmatte;
+    }
+
     public boolean isPawnPromoted() {
         return pawnPromoted;
     }
@@ -61,5 +101,13 @@ public class MoveEvent {
 
     public void setCastlingType(CastlingType castlingType) {
         this.castlingType = castlingType;
+    }
+
+    public AmbiguitityType getAmbiguity() {
+        return ambiguitityType;
+    }
+
+    public void setAmbiguitityType(AmbiguitityType ambiguitityType) {
+        this.ambiguitityType = ambiguitityType;
     }
 }

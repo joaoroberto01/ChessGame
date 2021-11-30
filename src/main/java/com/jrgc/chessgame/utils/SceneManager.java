@@ -1,11 +1,15 @@
 package com.jrgc.chessgame.utils;
 
 import com.jrgc.chessgame.ChessApplication;
+import com.jrgc.chessgame.Settings;
 import com.jrgc.chessgame.controllers.ConfirmationController;
+import com.jrgc.chessgame.controllers.GameOverController;
 import com.jrgc.chessgame.controllers.PawnPromotionController;
 import com.jrgc.chessgame.controllers.RulesController;
 import com.jrgc.chessgame.interfaces.ConfirmationListener;
 import com.jrgc.chessgame.interfaces.PawnPromotionListener;
+import com.jrgc.chessgame.models.game.DrawType;
+import com.jrgc.chessgame.models.game.GameOverReason;
 import com.jrgc.chessgame.models.game.Player;
 import com.jrgc.chessgame.models.pieces.Piece;
 import javafx.fxml.FXMLLoader;
@@ -46,8 +50,16 @@ public class SceneManager {
         showScene(stage, sceneDetails);
     }
 
+    public static void goToSimulateGame(Stage stage){
+        SceneDetails sceneDetails = new SceneDetails("simulate-game-view.fxml", "Simulação de Partida", 1000, 720);
+
+        showScene(stage, sceneDetails);
+    }
+
     public static void goToGame(Stage stage){
-        SceneDetails sceneDetails = new SceneDetails("game-view.fxml", "Chess Game", 1000, 720);
+        Settings settings = Settings.getInstance();
+        String title = settings.getName(Player.WHITE) + " vs " + settings.getName(Player.BLACK);
+        SceneDetails sceneDetails = new SceneDetails("game-view.fxml", title, 1000, 720);
 
         showScene(stage, sceneDetails);
     }
@@ -63,7 +75,7 @@ public class SceneManager {
             PawnPromotionController pawnPromotionController = fxmlLoader.getController();
             pawnPromotionController.setup(currentPlayer, pawnPromotionListener);
 
-            showPopUpStage(root, parent, sceneDetails, true);
+            showPopUpStage(root, parent, sceneDetails, true, true);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -77,7 +89,44 @@ public class SceneManager {
             ConfirmationController confirmationController = fxmlLoader.getController();
             confirmationController.setup(sceneDetails.title, confirmationListener);
 
-            showPopUpStage(root, parent, sceneDetails, true);
+            showPopUpStage(root, parent, sceneDetails, true, true);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void popUpGameOver(Stage root, Player winner, GameOverReason gameOverReason, DrawType drawType) {
+        Settings settings = Settings.getInstance();
+        String title = winner != null ? settings.getName(winner) + " venceu" : "Empate";
+
+        SceneDetails sceneDetails = new SceneDetails("gameover-view.fxml", title, 340, 160);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(ChessApplication.class.getResource(sceneDetails.path));
+            Parent parent = fxmlLoader.load();
+            GameOverController gameOverController = fxmlLoader.getController();
+            gameOverController.setup(winner, gameOverReason, drawType);
+
+            showPopUpStage(root, parent, sceneDetails);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void popUpSimulationGameOver(Stage root, Player winner, String whiteName, String blackName) {
+        String title = "Empate";
+        if (winner != null) {
+            title = winner == Player.WHITE ? whiteName : blackName;
+            title += " venceu";
+        }
+
+        SceneDetails sceneDetails = new SceneDetails("gameover-view.fxml", title, 340, 160);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(ChessApplication.class.getResource(sceneDetails.path));
+            Parent parent = fxmlLoader.load();
+            GameOverController gameOverController = fxmlLoader.getController();
+            gameOverController.setupSimulation(winner, whiteName, blackName);
+
+            showPopUpStage(root, parent, sceneDetails);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -91,7 +140,7 @@ public class SceneManager {
             RulesController rulesController = fxmlLoader.getController();
             rulesController.setup(pieceType);
 
-            showPopUpStage(root, parent, sceneDetails, false);
+            showPopUpStage(root, parent, sceneDetails, false, true);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -113,7 +162,20 @@ public class SceneManager {
         }
     }
 
-    private static void showPopUpStage(Stage root, Parent parent, SceneDetails sceneDetails, boolean blur){
+    private static void showPopUpStage(Stage root, Parent parent, SceneDetails sceneDetails){
+        Scene scene = new Scene(parent, sceneDetails.width, sceneDetails.height);
+
+        Stage stage = new Stage();
+        stage.setTitle(sceneDetails.title);
+        stage.initOwner(root);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.setScene(scene);
+
+        stage.show();
+    }
+
+    private static void showPopUpStage(Stage root, Parent parent, SceneDetails sceneDetails, boolean blur, boolean wait){
         Scene scene = new Scene(parent, sceneDetails.width, sceneDetails.height);
 
         Stage stage = new Stage();

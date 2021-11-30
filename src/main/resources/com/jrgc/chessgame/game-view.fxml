@@ -6,6 +6,8 @@
 <?import java.net.URL?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.jrgc.chessgame.controllers.GameController" id="root">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
@@ -24,52 +26,64 @@
     </left>
 
     <right>
-        <VBox prefWidth="250" spacing="20" alignment="TOP_CENTER">
-            <Label fx:id="turnLabel" id="turnLabel" textAlignment="CENTER" wrapText="true"/>
+        <VBox prefWidth="250" spacing="30" alignment="TOP_CENTER">
+            <Label fx:id="turnLabel" id="turnLabel" alignment="CENTER" textAlignment="CENTER" prefHeight="50" wrapText="true"/>
 
-            <HBox spacing="10">
-                <Button text="Reiniciar" styleClass="image-button" onAction="#onResetClick">
-                    <graphic>
-                        <ImageView fitWidth="48" fitHeight="48">
-                            <Image url="@icons/reset.png"/>
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button fx:id="drawButton" text="Sugerir Empate" styleClass="image-button"
-                        onAction="#onDrawSuggestClick">
-                    <graphic>
-                        <ImageView fitWidth="48" fitHeight="48">
-                            <Image url="@icons/draw.png"/>
-                        </ImageView>
-                    </graphic>
-                </Button>
-                <Button fx:id="surrenderButton" text="Rendição" styleClass="image-button" onAction="#onSurrenderClick">
-                    <graphic>
-                        <ImageView fitWidth="48" fitHeight="48">
-                            <Image url="@icons/surrender.png"/>
-                        </ImageView>
-                    </graphic>
-                </Button>
-            </HBox>
+            <VBox spacing="10" alignment="CENTER">
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Reiniciar" styleClass="image-button" onAction="#onResetClick">
+                        <graphic>
+                            <ImageView fitWidth="48" fitHeight="48">
+                                <Image url="@icons/reset.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="drawButton" text="Sugerir Empate" styleClass="image-button"
+                            onAction="#onDrawSuggestClick">
+                        <graphic>
+                            <ImageView fitWidth="48" fitHeight="48">
+                                <Image url="@icons/draw.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="surrenderButton" text="Rendição" styleClass="image-button"
+                            onAction="#onSurrenderClick">
+                        <graphic>
+                            <ImageView fitWidth="48" fitHeight="48">
+                                <Image url="@icons/surrender.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
 
-            <Button text="Voltar para seleção de nomes" styleClass="image-button" onAction="#onExitClick">
-                <graphic>
-                    <ImageView fitWidth="48" fitHeight="48">
-                        <Image url="@icons/exit.png"/>
-                    </ImageView>
-                </graphic>
-            </Button>
+                <Button text="Voltar para seleção de nomes" styleClass="image-button" onAction="#onExitClick">
+                    <graphic>
+                        <ImageView fitWidth="48" fitHeight="48">
+                            <Image url="@icons/exit.png"/>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </VBox>
             <!--                <Button text="Check Case" onAction="#checkCase"/>-->
-            <!--                <Button text="CheckMatte Case" onAction="#checkmatteCase"/>-->
-            <Accordion>
-                <panes>
-                    <TitledPane text="Jogadas">
-                        <ListView fx:id="gameLogListView"/>
-                    </TitledPane>
-                </panes>
-            </Accordion>
+<!--            <Button text="CheckMatte Case" onAction="#checkmatteCase"/>-->
 
-            <Label fx:id="timeLabel" />
+
+            <VBox alignment="CENTER" spacing="20">
+                <padding>
+                    <Insets top="30"/>
+                </padding>
+                <HBox alignment="CENTER" spacing="20">
+                    <Text fx:id="whiteTimerLabel" id="whiteTimer" styleClass="timerLabel"/>
+                    <Text fx:id="blackTimerLabel" styleClass="timerLabel"/>
+                </HBox>
+                <Accordion>
+                    <panes>
+                        <TitledPane text="Jogadas">
+                            <ListView fx:id="gameLogListView"/>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+            </VBox>
         </VBox>
     </right>
 
