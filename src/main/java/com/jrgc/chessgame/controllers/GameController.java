@@ -420,6 +420,8 @@ public class GameController implements EventHandler<MouseEvent> {
         if (movedPlayer == Player.WHITE) {
             matchLog = new MatchLog(gameTurn);
             gameLogListView.getItems().add(matchLog);
+            if (gameState.isGameOver())
+                matchLog.writeToFile();
         }else {
             matchLog = gameLogListView.getItems().get(logCount - 1);
             matchLog.setBlackTurn(gameTurn);

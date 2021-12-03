@@ -154,14 +154,23 @@ public class SimulateGameController {
     }
 
     private void completeTurn(MoveEvent moveEvent) {
+        Piece beforeTransformPiece = null;
         Piece movedPiece = gameState.getPieceAt(moveEvent.getDestination());
-
-        updateAllPossibleMoves();
+        Player movedPlayer = gameState.getCurrentPlayer();
 
         if (simulationMoveEvent.getPromotedPiece() != null) {
+            List<Piece> pieces = gameState.getPlayerPieces(movedPlayer);
+            beforeTransformPiece = movedPiece.copy();
+            int index = pieces.indexOf(movedPiece);
             movedPiece = ((Pawn) movedPiece).transform(simulationMoveEvent.getPromotedPiece());
+            pieces.set(index, movedPiece);
+            gameState.setPieceAt(movedPiece, movedPiece.getBoardPosition());
+
             gameState.getPieceImageView(movedPiece.getBoardPosition()).setImage(movedPiece.getPieceImage());
+            moveEvent.setPromotedPiece(simulationMoveEvent.getPromotedPiece());
         }
+
+        updateAllPossibleMoves();
 
         boolean whiteCheck = Validator.checkValidation(Player.WHITE);
         boolean blackCheck = Validator.checkValidation(Player.BLACK);
@@ -174,8 +183,6 @@ public class SimulateGameController {
         if (gameState.isCheck())
             gameState.setCheckmatte(Validator.checkmatteValidation(movedPiece));
 
-        Player movedPlayer = gameState.getCurrentPlayer();
-
         moveEvent.setCheck(gameState.isCheck(movedPlayer));
         moveEvent.setCheckmatte(gameState.isCheckmatte());
 
@@ -184,6 +191,9 @@ public class SimulateGameController {
         DrawType draw = Validator.draw();
         gameState.setDraw(draw != null);
         gameState.updateGameStatus();
+
+        if (moveEvent.getPromotedPiece() != null)
+            movedPiece = beforeTransformPiece;
 
         List<GameTurn> gameTurns = GameState.getGameTurnsLog();
 
@@ -226,9 +236,8 @@ public class SimulateGameController {
             case RUNNING -> playSound(moveEvent.hasCaptured() ? SoundAlert.CAPTURE : SoundAlert.MOVE);
         }
 
-        if (gameState.isGameOver()) {
+        if (gameState.isGameOver())
             playSound(SoundAlert.GAME_OVER);
-        }
     }
 
     private Stage getStage(){

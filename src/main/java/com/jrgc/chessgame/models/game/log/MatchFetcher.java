@@ -93,7 +93,6 @@ public class MatchFetcher {
         log = log.replaceAll("[+#x]", "");
         log = new StringBuilder(log).reverse().toString();
 
-        System.out.println(log);
         if (log.length() == 0)
             return null;
 
