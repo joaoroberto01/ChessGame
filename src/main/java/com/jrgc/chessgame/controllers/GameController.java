@@ -522,12 +522,14 @@ public class GameController implements EventHandler<MouseEvent> {
             selectedPiece.setPossibleMoves();
             if (settings.shouldShowPath())
                 BoardUtils.showPossiblePaths(selectedPiece);
-            timer.start();
+            if (settings.isSoundOn())
+                timer.start();
         } else if (destinationPosition == null) {
             destinationPosition = clickedPosition;
             MoveEvent moveEvent = BoardUtils.moveOnBoard(sourcePosition, destinationPosition);
             if (moveEvent.isSuccess()) {
-                timer.toggle();
+                if (settings.isSoundOn())
+                    timer.toggle();
                 completeTurn(moveEvent);
             }else
                 playSound(SoundAlert.INVALID);
